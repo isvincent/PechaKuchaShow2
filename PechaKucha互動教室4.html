@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>簡報力！PechaKucha 20×20 互動教室</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1c1740;
+    --ink-soft:#4a4370;
+    --paper:#fbf9ff;
+    --card:#ffffff;
+    --coral:#ff4d79;
+    --teal:#00c2b0;
+    --yellow:#ffc531;
+    --violet:#7c4dff;
+    --sky:#2f86ff;
+    --coral-soft:#ffe3eb;
+    --teal-soft:#d6f6f2;
+    --yellow-soft:#fff3d1;
+    --violet-soft:#eae1ff;
+    --sky-soft:#dbeafe;
+    --shadow:0 12px 30px rgba(28,23,64,.12);
+    --shadow-lg:0 20px 50px rgba(28,23,64,.18);
+    --radius:22px;
+    --fs-base:18px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:"Noto Sans TC","Fredoka",-apple-system,"PingFang TC","Microsoft JhengHei",sans-serif;
+    font-size:var(--fs-base);
+    color:var(--ink);
+    line-height:1.75;
+    background:
+      radial-gradient(circle at 12% 8%, var(--coral-soft) 0, transparent 32%),
+      radial-gradient(circle at 88% 12%, var(--teal-soft) 0, transparent 34%),
+      radial-gradient(circle at 78% 88%, var(--violet-soft) 0, transparent 34%),
+      radial-gradient(circle at 8% 92%, var(--yellow-soft) 0, transparent 30%),
+      var(--paper);
+    background-attachment:fixed;
+    min-height:100vh;
+    -webkit-text-size-adjust:100%;
+  }
+  h1,h2,h3{font-family:"Fredoka","Noto Sans TC",sans-serif;font-weight:700;line-height:1.25;letter-spacing:.3px}
+  ::selection{background:var(--yellow);color:var(--ink)}
+  a{color:var(--violet)}
+
+  /* ===== floating chatter bubbles ===== */
+  .bubbles{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+  .bubble{position:absolute;font-size:26px;opacity:.14;animation:floatUp linear infinite}
+  @keyframes floatUp{
+    0%{transform:translateY(110vh) rotate(0deg)}
+    100%{transform:translateY(-15vh) rotate(360deg)}
+  }
+
+  /* ===== top nav ===== */
+  header{
+    position:sticky;top:0;z-index:50;
+    background:rgba(251,249,255,.86);
+    backdrop-filter:blur(12px);
+    border-bottom:2px solid rgba(124,77,255,.12);
+  }
+  .nav-inner{max-width:1120px;margin:0 auto;padding:12px 18px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  .logo{display:flex;align-items:center;gap:10px;font-family:"Fredoka",sans-serif;font-weight:700;font-size:1.35rem;color:var(--ink);white-space:nowrap}
+  .logo .dot{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--coral),var(--violet));display:grid;place-items:center;color:#fff;font-weight:700;box-shadow:var(--shadow);animation:pulse 2.4s ease-in-out infinite}
+  @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
+  .tabs{display:flex;gap:6px;flex-wrap:wrap;flex:1}
+  .tab-btn{
+    border:none;cursor:pointer;font-family:inherit;font-size:1rem;font-weight:700;
+    padding:9px 15px;border-radius:14px;background:transparent;color:var(--ink-soft);
+    transition:.18s;display:flex;align-items:center;gap:6px;
+  }
+  .tab-btn:hover{background:var(--violet-soft);color:var(--ink);transform:translateY(-1px)}
+  .tab-btn.active{background:linear-gradient(135deg,var(--violet),var(--sky));color:#fff;box-shadow:var(--shadow)}
+  .nav-tools{display:flex;gap:8px;align-items:center}
+  .icon-btn{
+    border:2px solid var(--violet-soft);background:var(--card);cursor:pointer;
+    width:44px;height:44px;border-radius:13px;display:grid;place-items:center;font-size:1.2rem;
+    transition:.18s;color:var(--ink)
+  }
+  .icon-btn:hover{border-color:var(--violet);transform:translateY(-2px);box-shadow:var(--shadow)}
+  .btn{
+    border:none;cursor:pointer;font-family:inherit;font-weight:700;font-size:1rem;
+    padding:11px 20px;border-radius:14px;color:#fff;transition:.18s;
+    background:linear-gradient(135deg,var(--coral),#ff7aa0);box-shadow:var(--shadow);display:inline-flex;align-items:center;gap:8px
+  }
+  .btn:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg);filter:brightness(1.04)}
+  .btn:active{transform:translateY(0)}
+  .btn.teal{background:linear-gradient(135deg,var(--teal),#4fded0)}
+  .btn.violet{background:linear-gradient(135deg,var(--violet),var(--sky))}
+  .btn.yellow{background:linear-gradient(135deg,#ffb400,var(--yellow));color:var(--ink)}
+  .btn.ghost{background:var(--card);color:var(--ink);border:2px solid var(--violet-soft);box-shadow:none}
+  .btn.ghost:hover{border-color:var(--violet)}
+  .btn:disabled{opacity:.45;cursor:not-allowed;transform:none;filter:none}
+
+  /* ===== layout ===== */
+  main{max-width:1120px;margin:0 auto;padding:24px 18px 80px;position:relative;z-index:1}
+  .panel{display:none;animation:fadeIn .45s ease}
+  .panel.active{display:block}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+  .card{background:var(--card);border-radius:var(--radius);padding:26px;box-shadow:var(--shadow);margin-bottom:22px;border:1px solid rgba(124,77,255,.07)}
+  .eyebrow{display:inline-block;font-weight:700;font-size:.85rem;letter-spacing:1.5px;text-transform:uppercase;padding:5px 13px;border-radius:20px;margin-bottom:12px}
+  .eyebrow.coral{background:var(--coral-soft);color:var(--coral)}
+  .eyebrow.teal{background:var(--teal-soft);color:#008c7e}
+  .eyebrow.violet{background:var(--violet-soft);color:var(--violet)}
+  .eyebrow.yellow{background:var(--yellow-soft);color:#c78a00}
+  .eyebrow.sky{background:var(--sky-soft);color:var(--sky)}
+
+  /* ===== hero ===== */
+  .hero{
+    background:linear-gradient(135deg,#fff 0%,#fff 100%);
+    border-radius:28px;padding:40px 34px;box-shadow:var(--shadow-lg);
+    position:relative;overflow:hidden;margin-bottom:26px;
+    border:1px solid rgba(124,77,255,.08)
+  }
+  .hero h1{font-size:clamp(2rem,5.5vw,3.3rem);margin-bottom:10px}
+  .hero h1 .grad{background:linear-gradient(120deg,var(--coral),var(--violet),var(--sky));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero p.lead{font-size:1.18rem;color:var(--ink-soft);max-width:640px;margin-bottom:22px}
+  .hero-cta{display:flex;gap:12px;flex-wrap:wrap}
+  .hero-grid{position:absolute;right:-30px;top:-20px;width:340px;height:340px;opacity:.9;pointer-events:none}
+  @media(max-width:880px){.hero-grid{display:none}}
+
+  .tile-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:7px}
+  .tile{aspect-ratio:1;border-radius:9px;animation:tilePop .5s backwards}
+  @keyframes tilePop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+
+  .stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-top:8px}
+  .stat{background:var(--card);border-radius:18px;padding:18px;text-align:center;box-shadow:var(--shadow);border-top:5px solid var(--violet)}
+  .stat:nth-child(1){border-top-color:var(--coral)}
+  .stat:nth-child(2){border-top-color:var(--teal)}
+  .stat:nth-child(3){border-top-color:var(--yellow)}
+  .stat:nth-child(4){border-top-color:var(--sky)}
+  .stat .num{font-family:"Fredoka",sans-serif;font-size:2.3rem;font-weight:700;line-height:1}
+  .stat .lbl{color:var(--ink-soft);font-size:.95rem;margin-top:6px}
+
+  /* ===== lessons ===== */
+  .lesson-nav{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}
+  .lesson-chip{
+    border:2px solid transparent;cursor:pointer;font-family:inherit;font-weight:700;font-size:1rem;
+    padding:12px 18px;border-radius:16px;background:var(--card);color:var(--ink);transition:.18s;
+    display:flex;align-items:center;gap:9px;box-shadow:var(--shadow)
+  }
+  .lesson-chip:hover{transform:translateY(-2px)}
+  .lesson-chip .em{font-size:1.4rem}
+  .lesson-chip[data-l="prep"].on{border-color:var(--coral);background:var(--coral-soft)}
+  .lesson-chip[data-l="slide"].on{border-color:var(--teal);background:var(--teal-soft)}
+  .lesson-chip[data-l="deliver"].on{border-color:var(--sky);background:var(--sky-soft)}
+  .lesson-chip[data-l="pk"].on{border-color:var(--violet);background:var(--violet-soft)}
+
+  .lesson{display:none}
+  .lesson.active{display:block;animation:fadeIn .4s}
+  .point{
+    display:flex;gap:16px;align-items:flex-start;padding:18px;border-radius:18px;margin-bottom:14px;
+    background:var(--paper);border:1px solid rgba(124,77,255,.08);transition:.2s
+  }
+  .point:hover{background:#fff;box-shadow:var(--shadow);transform:translateX(4px)}
+  .point .badge{
+    flex:none;width:52px;height:52px;border-radius:15px;display:grid;place-items:center;
+    font-size:1.7rem;background:linear-gradient(135deg,var(--violet),var(--sky));color:#fff;box-shadow:var(--shadow)
+  }
+  .point.c1 .badge{background:linear-gradient(135deg,var(--coral),#ff8aa8)}
+  .point.c2 .badge{background:linear-gradient(135deg,var(--teal),#5fe0d2)}
+  .point.c3 .badge{background:linear-gradient(135deg,var(--yellow),#ffd766);color:var(--ink)}
+  .point.c4 .badge{background:linear-gradient(135deg,var(--violet),#a385ff)}
+  .point.c5 .badge{background:linear-gradient(135deg,var(--sky),#6aa8ff)}
+  .point h4{font-family:"Noto Sans TC";font-size:1.18rem;margin-bottom:4px}
+  .point p{color:var(--ink-soft);font-size:1.02rem}
+  .tip{background:var(--yellow-soft);border-left:6px solid var(--yellow);border-radius:12px;padding:14px 18px;margin:16px 0;font-size:1.02rem}
+  .tip b{color:#a06d00}
+  .lesson-done{display:flex;justify-content:flex-end;margin-top:8px}
+
+  /* ===== practice / timer ===== */
+  .timer-wrap{display:grid;grid-template-columns:340px 1fr;gap:26px;align-items:start}
+  @media(max-width:820px){.timer-wrap{grid-template-columns:1fr}}
+  .ring-box{position:relative;width:300px;height:300px;margin:0 auto}
+  .ring-box svg{transform:rotate(-90deg);width:100%;height:100%}
+  .ring-box .center{position:absolute;inset:0;display:grid;place-content:center;text-align:center}
+  .ring-box .sec{font-family:"Fredoka",sans-serif;font-size:4.4rem;font-weight:700;line-height:1}
+  .ring-box .of{color:var(--ink-soft);font-weight:700;margin-top:2px}
+  .slide-count{font-size:1.15rem;color:var(--violet);font-weight:700;margin-top:6px}
+  .timer-ctrl{display:flex;gap:10px;justify-content:center;margin-top:20px;flex-wrap:wrap}
+  .cfg{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+  .cfg label{font-weight:700;font-size:.95rem;display:flex;flex-direction:column;gap:5px}
+  .cfg input{font-family:inherit;font-size:1.05rem;padding:9px 12px;border:2px solid var(--violet-soft);border-radius:12px;width:110px}
+  .cfg input:focus{outline:none;border-color:var(--violet)}
+  .cue{background:var(--paper);border-radius:18px;padding:20px;min-height:170px;border:1px solid rgba(124,77,255,.08)}
+  .cue h4{color:var(--violet);margin-bottom:8px}
+  .cue-topic{font-size:1.55rem;font-weight:700;color:var(--ink);min-height:2.2em;display:flex;align-items:center}
+  .cue-next{color:var(--ink-soft);margin-top:10px;font-size:1rem}
+  .progress-bar{height:12px;border-radius:8px;background:var(--violet-soft);overflow:hidden;margin-top:16px}
+  .progress-bar > div{height:100%;width:0;background:linear-gradient(90deg,var(--coral),var(--violet),var(--sky));transition:width .3s}
+  .topic-editor textarea{width:100%;font-family:inherit;font-size:1rem;line-height:1.9;padding:14px;border:2px solid var(--violet-soft);border-radius:14px;resize:vertical;min-height:130px}
+  .topic-editor textarea:focus{outline:none;border-color:var(--violet)}
+
+  /* ===== quiz ===== */
+  .quiz-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:18px}
+  .q-progress{font-weight:700;color:var(--violet)}
+  .q-card{background:var(--paper);border-radius:20px;padding:26px;border:1px solid rgba(124,77,255,.08)}
+  .q-num{display:inline-grid;place-items:center;width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,var(--violet),var(--sky));color:#fff;font-weight:700;margin-bottom:14px}
+  .q-text{font-size:1.3rem;font-weight:700;margin-bottom:20px;line-height:1.5}
+  .opts{display:grid;gap:12px}
+  .opt{
+    text-align:left;font-family:inherit;font-size:1.08rem;cursor:pointer;
+    padding:15px 18px;border-radius:15px;border:2px solid var(--violet-soft);background:#fff;
+    transition:.15s;display:flex;gap:12px;align-items:center;color:var(--ink)
+  }
+  .opt:hover:not(:disabled){border-color:var(--violet);transform:translateX(4px)}
+  .opt .key{flex:none;width:30px;height:30px;border-radius:9px;background:var(--violet-soft);color:var(--violet);font-weight:700;display:grid;place-items:center}
+  .opt.correct{border-color:var(--teal);background:var(--teal-soft)}
+  .opt.correct .key{background:var(--teal);color:#fff}
+  .opt.wrong{border-color:var(--coral);background:var(--coral-soft)}
+  .opt.wrong .key{background:var(--coral);color:#fff}
+  .opt:disabled{cursor:default}
+  .explain{margin-top:16px;padding:15px 18px;border-radius:14px;background:var(--sky-soft);border-left:6px solid var(--sky);font-size:1.02rem;display:none}
+  .explain.show{display:block;animation:fadeIn .3s}
+  .quiz-result{text-align:center;padding:20px}
+  .score-ring{width:180px;height:180px;margin:0 auto 16px;position:relative}
+  .score-ring svg{transform:rotate(-90deg)}
+  .score-ring .center{position:absolute;inset:0;display:grid;place-content:center;font-family:"Fredoka";font-size:2.6rem;font-weight:700}
+
+  /* ===== history ===== */
+  .hist-tools{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+  table{width:100%;border-collapse:collapse;font-size:1rem}
+  th,td{padding:12px 14px;text-align:left;border-bottom:1px solid var(--violet-soft)}
+  th{background:var(--violet-soft);color:var(--violet);font-weight:700;position:sticky;top:0}
+  tr:hover td{background:var(--paper)}
+  .table-scroll{max-height:420px;overflow:auto;border-radius:16px;border:1px solid var(--violet-soft)}
+  .empty{text-align:center;padding:50px 20px;color:var(--ink-soft)}
+  .empty .em{font-size:3.5rem;display:block;margin-bottom:10px}
+  .medal{display:inline-block;padding:3px 10px;border-radius:20px;font-size:.85rem;font-weight:700}
+  .medal.read{background:var(--teal-soft);color:#008c7e}
+  .medal.quiz{background:var(--yellow-soft);color:#c78a00}
+  .medal.practice{background:var(--coral-soft);color:var(--coral)}
+
+  /* ===== toast + confetti ===== */
+  .toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(120px);z-index:200;background:var(--ink);color:#fff;padding:14px 24px;border-radius:16px;font-weight:700;box-shadow:var(--shadow-lg);transition:.35s;max-width:90vw}
+  .toast.show{transform:translateX(-50%) translateY(0)}
+  .confetti{position:fixed;top:-20px;width:12px;height:12px;z-index:150;pointer-events:none;border-radius:2px}
+
+  footer{text-align:center;color:var(--ink-soft);padding:20px;font-size:.92rem}
+
+  /* accessibility */
+  :focus-visible{outline:3px solid var(--violet);outline-offset:2px}
+  @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+  @media(max-width:560px){
+    :root{--fs-base:17px}
+    .nav-inner{padding:10px 12px}
+    .tab-btn{padding:8px 11px;font-size:.92rem}
+    .tab-btn .t-txt{display:none}
+    .card{padding:20px}
+    .hero{padding:28px 22px}
+    .logo span.full{display:none}
+  }
+</style>
+</head>
+<body>
+<div class="bubbles" id="bubbles" aria-hidden="true"></div>
+
+<header>
+  <div class="nav-inner">
+    <div class="logo"><span class="dot">P</span><span class="full">簡報力 · PechaKucha</span></div>
+    <nav class="tabs" role="tablist">
+      <button class="tab-btn active" data-tab="home" role="tab">🏠<span class="t-txt">首頁</span></button>
+      <button class="tab-btn" data-tab="learn" role="tab">📚<span class="t-txt">簡報技巧</span></button>
+      <button class="tab-btn" data-tab="practice" role="tab">⏱️<span class="t-txt">練習場</span></button>
+      <button class="tab-btn" data-tab="quiz" role="tab">✏️<span class="t-txt">測驗</span></button>
+      <button class="tab-btn" data-tab="history" role="tab">📊<span class="t-txt">學習歷程</span></button>
+    </nav>
+    <div class="nav-tools">
+      <button class="icon-btn" id="soundToggle" title="開／關音效" aria-label="切換音效">🔊</button>
+      <button class="icon-btn" id="wordBtn" title="下載 Word 文件" aria-label="下載 Word">📄</button>
+    </div>
+  </div>
+</header>
+
+<main>
+<!-- ============ HOME ============ -->
+<section class="panel active" id="tab-home" role="tabpanel">
+  <div class="hero">
+    <div class="hero-grid" id="heroGrid"></div>
+    <span class="eyebrow violet">給高中生的上台必修課</span>
+    <h1>把緊張變成掌聲<br><span class="grad">20 張投影片 × 20 秒</span></h1>
+    <p class="lead">學會清楚、有自信地上台報告，並用風靡全球的 <b>PechaKucha</b> 節奏，練出精煉又動人的簡報。教師可用來教學，學生也能自己反覆練習。</p>
+    <div class="hero-cta">
+      <button class="btn violet" data-goto="learn">📚 開始學技巧</button>
+      <button class="btn teal" data-goto="practice">⏱️ 進練習場</button>
+      <button class="btn yellow" data-goto="quiz">✏️ 挑戰測驗</button>
+    </div>
+  </div>
+
+  <div class="stat-row">
+    <div class="stat"><div class="num" style="color:var(--coral)">20</div><div class="lbl">張投影片</div></div>
+    <div class="stat"><div class="num" style="color:var(--teal)">20<span style="font-size:1.2rem">秒</span></div><div class="lbl">每張停留時間</div></div>
+    <div class="stat"><div class="num" style="color:#c78a00">6:40</div><div class="lbl">全程總長</div></div>
+    <div class="stat"><div class="num" style="color:var(--sky)">2003</div><div class="lbl">誕生於東京</div></div>
+  </div>
+
+  <div class="card">
+    <span class="eyebrow coral">這是什麼？</span>
+    <h2 style="margin-bottom:10px">PechaKucha（ペチャクチャ）是什麼？</h2>
+    <p style="color:var(--ink-soft);margin-bottom:14px">PechaKucha 是一種超熱門的簡報格式：<b>剛好 20 張投影片，每張自動播放 20 秒</b>，講者必須跟著節奏往下說，全程只有 6 分 40 秒。它的名字是日文「嘰嘰喳喳（閒聊）」的意思，由建築師 Astrid Klein 與 Mark Dytham 在 2003 年於東京發明。</p>
+    <div class="tip">💡 <b>為什麼很適合練習？</b> 固定的時間逼你把話講精簡、把重點想清楚，還能練出穩定的說話節奏——這正是高中報告最需要的能力！</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin-top:6px">
+      <div class="point c1"><div class="badge">⏱️</div><div><h4>時間固定</h4><p>不能拖也不能趕，練出好節奏。</p></div></div>
+      <div class="point c2"><div class="badge">🖼️</div><div><h4>視覺主導</h4><p>用圖說故事，而不是滿滿文字。</p></div></div>
+      <div class="point c4"><div class="badge">✂️</div><div><h4>逼你精煉</h4><p>只留最重要的話，訓練取捨。</p></div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <span class="eyebrow teal">怎麼使用這個網站</span>
+    <h2 style="margin-bottom:14px">四步驟，越練越強 🚀</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px">
+      <div class="point c1"><div class="badge">1</div><div><h4>學技巧</h4><p>讀完準備、投影片、表達與 PechaKucha 四個單元。</p></div></div>
+      <div class="point c2"><div class="badge">2</div><div><h4>進練習場</h4><p>用 20×20 計時器搭配你的大綱反覆演練。</p></div></div>
+      <div class="point c3"><div class="badge">3</div><div><h4>做測驗</h4><p>檢查自己是否真的懂了。</p></div></div>
+      <div class="point c4"><div class="badge">4</div><div><h4>看歷程</h4><p>記錄成長軌跡，還能下載存檔。</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ LEARN ============ -->
+<section class="panel" id="tab-learn" role="tabpanel">
+  <div class="card">
+    <span class="eyebrow violet">簡報技巧課</span>
+    <h2 style="margin-bottom:6px">上台報告，其實有公式 🎯</h2>
+    <p style="color:var(--ink-soft)">點下面四張卡片切換單元。讀完每個單元後按「我讀完了」，會記錄到你的學習歷程。</p>
+    <div class="lesson-nav" style="margin-top:18px">
+      <button class="lesson-chip on" data-l="prep"><span class="em">🎒</span>準備篇</button>
+      <button class="lesson-chip" data-l="slide"><span class="em">🖼️</span>投影片設計</button>
+      <button class="lesson-chip" data-l="deliver"><span class="em">🎤</span>上台表達</button>
+      <button class="lesson-chip" data-l="pk"><span class="em">⏱️</span>PechaKucha 篇</button>
+    </div>
+
+    <!-- prep -->
+    <div class="lesson active" data-lesson="prep">
+      <h3 style="color:var(--coral);margin-bottom:14px">🎒 準備篇：上台前先想清楚</h3>
+      <div class="point c1"><div class="badge">👥</div><div><h4>先認識你的聽眾</h4><p>他們是誰？已經知道多少？最想聽到什麼？對象是同學和老師，用詞就別太艱深，多舉大家有共鳴的例子。</p></div></div>
+      <div class="point c1"><div class="badge">🎯</div><div><h4>設定一個核心訊息</h4><p>問自己：「聽眾聽完，只要記得哪一句話？」整份簡報都繞著這句話走，不要什麼都想講。</p></div></div>
+      <div class="point c1"><div class="badge">📖</div><div><h4>用三段式結構</h4><p><b>開頭</b>抓住注意力（問句／故事／驚人數字）→ <b>中間</b>用 2～3 個重點展開 → <b>結尾</b>強力收尾並呼應核心訊息。</p></div></div>
+      <div class="point c1"><div class="badge">✨</div><div><h4>用故事包裝</h4><p>人們記得故事，卻記不住條列。把資料放進「我遇到一個問題…後來發現…」的情節裡，聽眾更投入。</p></div></div>
+      <div class="tip">💡 <b>小訣竅：</b>寫大綱時先只寫「標題」，確定順序合理，再補內容。這樣結構最清楚。</div>
+      <div class="lesson-done"><button class="btn teal done-btn" data-topic="準備篇">✅ 我讀完了</button></div>
+    </div>
+
+    <!-- slide -->
+    <div class="lesson" data-lesson="slide">
+      <h3 style="color:#008c7e;margin-bottom:14px">🖼️ 投影片設計：越乾淨越專業</h3>
+      <div class="point c2"><div class="badge">1️⃣</div><div><h4>一頁一個重點</h4><p>每張投影片只放一個想法。想講兩件事？那就拆成兩張。這正是 PechaKucha 的精神。</p></div></div>
+      <div class="point c2"><div class="badge">🔤</div><div><h4>少字、大字</h4><p>投影片不是講稿！用關鍵字取代整段句子，字級盡量大（標題大、內文至少看得清楚），最後一排的同學也要能讀到。</p></div></div>
+      <div class="point c2"><div class="badge">🌄</div><div><h4>用高品質的圖</h4><p>一張好圖勝過千言萬語。用清晰、不變形的圖片或圖示來說故事，避免模糊的網路小圖。</p></div></div>
+      <div class="point c2"><div class="badge">🎨</div><div><h4>風格一致</h4><p>整份簡報用同一組顏色和字型。挑 2～3 個主色，文字和背景要有足夠對比（深字淺底或淺字深底）。</p></div></div>
+      <div class="point c2"><div class="badge">🧹</div><div><h4>留白是朋友</h4><p>不要把版面塞滿。適當的空白讓重點更突出，看起來也更專業。</p></div></div>
+      <div class="tip">💡 <b>檢查法：</b>把投影片縮到最小，如果 3 秒內看不出重點，代表字太多或太亂，該精簡了。</div>
+      <div class="lesson-done"><button class="btn teal done-btn" data-topic="投影片設計">✅ 我讀完了</button></div>
+    </div>
+
+    <!-- deliver -->
+    <div class="lesson" data-lesson="deliver">
+      <h3 style="color:var(--sky);margin-bottom:14px">🎤 上台表達：讓人想聽下去</h3>
+      <div class="point c5"><div class="badge">👀</div><div><h4>眼神接觸</h4><p>看著聽眾，不要整場盯著螢幕或稿子。把目光輪流停在不同區域的同學身上，會顯得自信又真誠。</p></div></div>
+      <div class="point c5"><div class="badge">🧍</div><div><h4>站姿與肢體</h4><p>雙腳站穩、身體朝向聽眾，手勢自然輔助說明。別把手插口袋，也別一直摸頭髮或衣角。</p></div></div>
+      <div class="point c5"><div class="badge">🔊</div><div><h4>聲音三要素</h4><p><b>音量</b>要讓後排聽得到；<b>速度</b>別太快；善用<b>停頓</b>——在重點前後停一下，能製造期待、強調重點，也讓聽眾消化。</p></div></div>
+      <div class="point c5"><div class="badge">😌</div><div><h4>把緊張變能量</h4><p>會緊張很正常！上台前深呼吸幾次，最重要的是<b>充分練習</b>——練得夠熟，緊張自然變成專注的能量。</p></div></div>
+      <div class="point c5"><div class="badge">🚫</div><div><h4>少用口頭禪</h4><p>「呃…」「然後…」「就是…」太多會分散注意力。與其填補空檔，不如安靜地停頓一下。</p></div></div>
+      <div class="tip">💡 <b>練習法：</b>對著鏡子或手機錄影練一次，回放時你會馬上發現可以改進的地方。</div>
+      <div class="lesson-done"><button class="btn teal done-btn" data-topic="上台表達">✅ 我讀完了</button></div>
+    </div>
+
+    <!-- pk -->
+    <div class="lesson" data-lesson="pk">
+      <h3 style="color:var(--violet);margin-bottom:14px">⏱️ PechaKucha 篇：20×20 的魔法</h3>
+      <div class="point c4"><div class="badge">📐</div><div><h4>標準格式：20 × 20</h4><p>剛好 <b>20 張</b>投影片，每張 <b>自動</b>播放 <b>20 秒</b>，全程 6 分 40 秒。你不能手動換頁，只能跟著節奏走。</p></div></div>
+      <div class="point c4"><div class="badge">🗼</div><div><h4>從東京出發</h4><p>2003 年由 Astrid Klein 與 Mark Dytham 在東京發明，原本是給設計師快速分享點子的活動，如今全球數百座城市都在辦。</p></div></div>
+      <div class="point c4"><div class="badge">💬</div><div><h4>名字的意思</h4><p>「ペチャクチャ（PechaKucha）」在日文裡是「嘰嘰喳喳、閒聊」的聲音，呼應這種輕快、像聊天一樣的分享感。</p></div></div>
+      <div class="point c4"><div class="badge">🖼️</div><div><h4>視覺主導、少字</h4><p>因為每張只有 20 秒，投影片幾乎都是圖片，靠你「說」把故事串起來，而不是唸字。</p></div></div>
+      <div class="point c4"><div class="badge">🥁</div><div><h4>節奏就是一切</h4><p>成功關鍵是「話跟得上頁」。每張想好一句主軸，練到能自然地在 20 秒內講完並接下一張。</p></div></div>
+      <div class="tip">💡 <b>換算好記：</b>20 張 × 20 秒 = 400 秒 = 6 分 40 秒。到「練習場」用計時器實際跑一遍最有感！</div>
+      <div class="lesson-done"><button class="btn teal done-btn" data-topic="PechaKucha篇">✅ 我讀完了</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PRACTICE ============ -->
+<section class="panel" id="tab-practice" role="tabpanel">
+  <div class="card">
+    <span class="eyebrow coral">練習場</span>
+    <h2 style="margin-bottom:6px">PechaKucha 20×20 計時器 ⏱️</h2>
+    <p style="color:var(--ink-soft);margin-bottom:18px">先在下面填好你每一張投影片想講的主軸（一行一張），按開始後，計時器會自動換頁並提示你現在該講哪一句。反覆演練，練出穩定節奏！</p>
+
+    <div class="cfg">
+      <label>投影片張數<input type="number" id="cfgSlides" value="20" min="1" max="40"></label>
+      <label>每張秒數<input type="number" id="cfgSecs" value="20" min="3" max="120"></label>
+      <button class="btn ghost" id="resetDefault" style="align-self:flex-end">↺ 回到 20×20</button>
+    </div>
+
+    <div class="timer-wrap">
+      <div>
+        <div class="ring-box">
+          <svg viewBox="0 0 120 120">
+            <circle cx="60" cy="60" r="52" fill="none" stroke="var(--violet-soft)" stroke-width="12"/>
+            <circle id="ringProg" cx="60" cy="60" r="52" fill="none" stroke="url(#grad)" stroke-width="12" stroke-linecap="round" stroke-dasharray="326.7" stroke-dashoffset="0"/>
+            <defs><linearGradient id="grad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#ff4d79"/><stop offset="50%" stop-color="#7c4dff"/><stop offset="100%" stop-color="#2f86ff"/>
+            </linearGradient></defs>
+          </svg>
+          <div class="center">
+            <div class="sec" id="secDisplay">20</div>
+            <div class="of">秒</div>
+            <div class="slide-count" id="slideDisplay">第 1 / 20 張</div>
+          </div>
+        </div>
+        <div class="timer-ctrl">
+          <button class="btn violet" id="startBtn">▶ 開始</button>
+          <button class="btn ghost" id="pauseBtn" disabled>⏸ 暫停</button>
+          <button class="btn ghost" id="stopBtn" disabled>⏹ 停止</button>
+        </div>
+      </div>
+
+      <div>
+        <div class="cue">
+          <h4>📢 現在該講</h4>
+          <div class="cue-topic" id="cueTopic">按「開始」後，這裡會顯示你這張的主軸</div>
+          <div class="cue-next" id="cueNext"></div>
+          <div class="progress-bar"><div id="cueProgress"></div></div>
+        </div>
+        <div class="topic-editor" style="margin-top:18px">
+          <h4 style="color:var(--violet);margin-bottom:8px">📝 我的簡報大綱（一行一張投影片）</h4>
+          <textarea id="topicInput" placeholder="第1張：開場問句—你上台會緊張嗎？&#10;第2張：我的故事…&#10;第3張：重點一…&#10;（不填也可以，計時器一樣能用）"></textarea>
+          <div style="margin-top:10px;display:flex;gap:10px;flex-wrap:wrap">
+            <button class="btn yellow" id="loadDemo">✨ 載入示範大綱</button>
+            <button class="btn ghost" id="clearTopics">清空</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <span class="eyebrow yellow">練習小任務</span>
+    <h3 style="margin-bottom:12px">給自己的挑戰 🎯</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px">
+      <div class="point c3"><div class="badge">🥉</div><div><h4>新手：跟上節奏</h4><p>先用 5 張投影片練習，重點是「不趕不拖」，換頁時剛好講完一句。</p></div></div>
+      <div class="point c3"><div class="badge">🥈</div><div><h4>進階：完整 20 張</h4><p>填好 20 個主軸，完整跑完一次 6 分 40 秒不中斷。</p></div></div>
+      <div class="point c3"><div class="badge">🥇</div><div><h4>高手：脫稿演出</h4><p>不看大綱，靠眼神接觸和自然手勢完成整場。</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ QUIZ ============ -->
+<section class="panel" id="tab-quiz" role="tabpanel">
+  <div class="card">
+    <div class="quiz-head">
+      <div>
+        <span class="eyebrow sky">理解測驗</span>
+        <h2 style="margin:6px 0 0">檢查你懂多少 ✏️</h2>
+      </div>
+      <div class="q-progress" id="qProgress"></div>
+    </div>
+
+    <div id="quizIntro">
+      <p style="color:var(--ink-soft);margin-bottom:18px">10 道選擇題，涵蓋簡報技巧與 PechaKucha。每題作答後會立刻告訴你對不對並附上說明。完成後成績會存進學習歷程。</p>
+      <button class="btn violet" id="startQuiz">🚀 開始測驗</button>
+    </div>
+
+    <div id="quizBody" style="display:none"></div>
+
+    <div id="quizResult" style="display:none"></div>
+  </div>
+</section>
+
+<!-- ============ HISTORY ============ -->
+<section class="panel" id="tab-history" role="tabpanel">
+  <div class="card">
+    <span class="eyebrow teal">學習歷程</span>
+    <h2 style="margin:6px 0 14px">你的成長軌跡 📊</h2>
+    <div class="stat-row" style="margin-bottom:20px">
+      <div class="stat"><div class="num" id="statRead" style="color:var(--coral)">0</div><div class="lbl">讀完單元</div></div>
+      <div class="stat"><div class="num" id="statPractice" style="color:var(--teal)">0</div><div class="lbl">練習次數</div></div>
+      <div class="stat"><div class="num" id="statQuiz" style="color:#c78a00">0</div><div class="lbl">完成測驗</div></div>
+      <div class="stat"><div class="num" id="statBest" style="color:var(--sky)">—</div><div class="lbl">最佳分數</div></div>
+    </div>
+    <div class="hist-tools">
+      <button class="btn teal" id="dlCsv">⬇️ 下載紀錄 (CSV)</button>
+      <button class="btn ghost" id="dlTxt">⬇️ 下載紀錄 (文字)</button>
+      <button class="btn ghost" id="clearHist">🗑️ 清除全部紀錄</button>
+    </div>
+    <div id="histArea"></div>
+  </div>
+</section>
+</main>
+
+<footer>
+  🎈 簡報力 · PechaKucha 20×20 互動教室　|　為高中課堂與自學設計　|　紀錄儲存在你的瀏覽器中
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   簡報力 PechaKucha 20×20 — 互動邏輯
+   ============================================================ */
+"use strict";
+
+/* ---------- 儲存（安全包裝，離線也能用） ---------- */
+const STORE_KEY = "pk2020_history_v1";
+const mem = {data:null};
+function loadHist(){
+  if(mem.data) return mem.data;
+  try{ const r = localStorage.getItem(STORE_KEY); mem.data = r?JSON.parse(r):[]; }
+  catch(e){ mem.data = []; }
+  return mem.data;
+}
+function saveHist(){
+  try{ localStorage.setItem(STORE_KEY, JSON.stringify(mem.data)); }catch(e){/* 記憶體暫存 */}
+}
+function logEvent(type, detail, score){
+  const h = loadHist();
+  const d = new Date();
+  h.unshift({
+    type, detail,
+    score: (score===undefined?null:score),
+    time: d.toLocaleString("zh-TW",{year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit"}),
+    ts: d.getTime()
+  });
+  saveHist();
+  renderHistory();
+}
+
+/* ---------- 音效引擎 (Web Audio API) ---------- */
+let AC=null, soundOn=true;
+function ac(){ if(!AC){ try{ AC = new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} } return AC; }
+function beep(freq, dur, type, vol){
+  if(!soundOn) return; const c=ac(); if(!c) return;
+  if(c.state==="suspended") c.resume();
+  const o=c.createOscillator(), g=c.createGain();
+  o.type=type||"sine"; o.frequency.value=freq;
+  g.gain.setValueAtTime(0, c.currentTime);
+  g.gain.linearRampToValueAtTime(vol||0.14, c.currentTime+0.01);
+  g.gain.exponentialRampToValueAtTime(0.0001, c.currentTime+(dur||0.15));
+  o.connect(g); g.connect(c.destination);
+  o.start(); o.stop(c.currentTime+(dur||0.15));
+}
+const S = {
+  click:()=>beep(520,0.08,"triangle",0.10),
+  tab:()=>{beep(440,0.07,"sine",0.10);setTimeout(()=>beep(660,0.09,"sine",0.10),60);},
+  tick:()=>beep(880,0.05,"sine",0.06),
+  advance:()=>{beep(700,0.1,"square",0.10);setTimeout(()=>beep(1040,0.12,"square",0.10),90);},
+  right:()=>{beep(660,0.1,"sine",0.14);setTimeout(()=>beep(880,0.12,"sine",0.14),100);setTimeout(()=>beep(1180,0.16,"sine",0.14),210);},
+  wrong:()=>{beep(300,0.16,"sawtooth",0.10);setTimeout(()=>beep(220,0.2,"sawtooth",0.10),120);},
+  done:()=>{[523,659,784,1046].forEach((f,i)=>setTimeout(()=>beep(f,0.18,"triangle",0.14),i*130));},
+  save:()=>{beep(760,0.08,"sine",0.10);setTimeout(()=>beep(1020,0.1,"sine",0.10),80);}
+};
+const soundToggle=document.getElementById("soundToggle");
+soundToggle.addEventListener("click",()=>{
+  soundOn=!soundOn; soundToggle.textContent=soundOn?"🔊":"🔇";
+  if(soundOn){ac();S.click();}
+  toast(soundOn?"音效已開啟 🔊":"音效已關閉 🔇");
+});
+
+/* ---------- Toast ---------- */
+let toastTimer;
+function toast(msg){
+  const t=document.getElementById("toast");
+  t.textContent=msg; t.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove("show"),2600);
+}
+
+/* ---------- 背景泡泡 + Hero 拼貼 ---------- */
+(function(){
+  const emo=["💬","🗨️","🎤","⭐","🖼️","⏱️","✨","🎯","💡","📊"];
+  const box=document.getElementById("bubbles");
+  for(let i=0;i<14;i++){
+    const b=document.createElement("div"); b.className="bubble";
+    b.textContent=emo[i%emo.length];
+    b.style.left=Math.random()*100+"%";
+    b.style.fontSize=(20+Math.random()*30)+"px";
+    b.style.animationDuration=(16+Math.random()*20)+"s";
+    b.style.animationDelay=(-Math.random()*20)+"s";
+    box.appendChild(b);
+  }
+  const colors=["var(--coral)","var(--teal)","var(--yellow)","var(--violet)","var(--sky)"];
+  const grid=document.getElementById("heroGrid");
+  const g=document.createElement("div"); g.className="tile-grid";
+  for(let i=0;i<20;i++){
+    const t=document.createElement("div"); t.className="tile";
+    t.style.background=colors[i%colors.length];
+    t.style.animationDelay=(i*0.05)+"s";
+    t.style.opacity=(0.55+Math.random()*0.45).toFixed(2);
+    g.appendChild(t);
+  }
+  grid.appendChild(g);
+})();
+
+/* ---------- 分頁切換 ---------- */
+const tabBtns=[...document.querySelectorAll(".tab-btn")];
+const panels=[...document.querySelectorAll(".panel")];
+function goTab(name){
+  tabBtns.forEach(b=>b.classList.toggle("active",b.dataset.tab===name));
+  panels.forEach(p=>p.classList.toggle("active",p.id==="tab-"+name));
+  window.scrollTo({top:0,behavior:"smooth"});
+  if(name==="history") renderHistory();
+  S.tab();
+}
+tabBtns.forEach(b=>b.addEventListener("click",()=>goTab(b.dataset.tab)));
+document.querySelectorAll("[data-goto]").forEach(b=>b.addEventListener("click",()=>goTab(b.dataset.goto)));
+
+/* ---------- 單元切換 + 讀完 ---------- */
+const chips=[...document.querySelectorAll(".lesson-chip")];
+const lessons=[...document.querySelectorAll(".lesson")];
+chips.forEach(c=>c.addEventListener("click",()=>{
+  chips.forEach(x=>x.classList.toggle("on",x===c));
+  lessons.forEach(l=>l.classList.toggle("active",l.dataset.lesson===c.dataset.l));
+  S.click();
+}));
+let readSet;
+try{ const arr=JSON.parse(localStorage.getItem("pk2020_read")||"[]"); readSet=new Set(Array.isArray(arr)?arr:[]); }
+catch(e){ readSet=new Set(); }
+document.querySelectorAll(".done-btn").forEach(btn=>{
+  const topic=btn.dataset.topic;
+  if(readSet.has(topic)){ btn.textContent="✅ 已完成"; btn.disabled=true; btn.classList.remove("teal"); btn.classList.add("ghost"); }
+  btn.addEventListener("click",()=>{
+    if(readSet.has(topic)) return;
+    readSet.add(topic);
+    try{localStorage.setItem("pk2020_read",JSON.stringify([...readSet]));}catch(e){}
+    btn.textContent="✅ 已完成"; btn.disabled=true; btn.classList.remove("teal"); btn.classList.add("ghost");
+    logEvent("read","讀完單元：「"+topic+"」");
+    S.done(); confetti(); toast("讀完「"+topic+"」，記錄成功！🎉");
+  });
+});
+
+/* ---------- Confetti ---------- */
+function confetti(){
+  if(window.matchMedia&&window.matchMedia("(prefers-reduced-motion:reduce)").matches) return;
+  const colors=["#ff4d79","#00c2b0","#ffc531","#7c4dff","#2f86ff"];
+  for(let i=0;i<70;i++){
+    const c=document.createElement("div"); c.className="confetti";
+    c.style.left=Math.random()*100+"vw";
+    c.style.background=colors[i%colors.length];
+    c.style.width=(6+Math.random()*8)+"px"; c.style.height=c.style.width;
+    if(Math.random()>0.5) c.style.borderRadius="50%";
+    document.body.appendChild(c);
+    const dur=1800+Math.random()*1400, x=(Math.random()-0.5)*260;
+    c.animate([
+      {transform:"translate(0,0) rotate(0)",opacity:1},
+      {transform:`translate(${x}px,${window.innerHeight+40}px) rotate(${Math.random()*720}deg)`,opacity:0.9}
+    ],{duration:dur,easing:"cubic-bezier(.2,.6,.4,1)"}).onfinish=()=>c.remove();
+  }
+}
+
+/* ---------- PechaKucha 計時器 ---------- */
+const RING_LEN=326.7;
+let T={slides:20,secs:20,cur:1,left:20,running:false,paused:false,id:null,topics:[]};
+const el={
+  slides:document.getElementById("cfgSlides"),
+  secs:document.getElementById("cfgSecs"),
+  sec:document.getElementById("secDisplay"),
+  slide:document.getElementById("slideDisplay"),
+  ring:document.getElementById("ringProg"),
+  topic:document.getElementById("cueTopic"),
+  next:document.getElementById("cueNext"),
+  prog:document.getElementById("cueProgress"),
+  input:document.getElementById("topicInput"),
+  start:document.getElementById("startBtn"),
+  pause:document.getElementById("pauseBtn"),
+  stop:document.getElementById("stopBtn")
+};
+function parseTopics(){
+  return el.input.value.split("\n").map(s=>s.trim()).filter(Boolean);
+}
+function updateRing(){
+  const frac=T.left/T.secs;
+  el.ring.style.strokeDashoffset=(RING_LEN*(1-frac)).toFixed(1);
+}
+function showCue(){
+  const t=T.topics;
+  el.topic.textContent = t[T.cur-1] || ("第 "+T.cur+" 張投影片");
+  el.next.textContent = t[T.cur] ? ("下一張 ▶ "+t[T.cur]) : (T.cur<T.slides?"下一張 ▶ …":"這是最後一張囉！");
+  el.slide.textContent="第 "+T.cur+" / "+T.slides+" 張";
+  el.prog.style.width=(T.cur/T.slides*100)+"%";
+}
+function tickSecond(){
+  T.left--;
+  el.sec.textContent=T.left;
+  if(T.left<=5 && T.left>0) S.tick();
+  updateRing();
+  if(T.left<=0){
+    if(T.cur>=T.slides){ finishTimer(); return; }
+    T.cur++; T.left=T.secs; el.sec.textContent=T.left;
+    S.advance(); showCue(); updateRing();
+  }
+}
+function startTimer(){
+  if(T.running && T.paused){
+    T.paused=false; T.id=setInterval(tickSecond,1000);
+    el.start.disabled=true; el.pause.disabled=false; S.click(); return;
+  }
+  T.slides=Math.max(1,Math.min(40,parseInt(el.slides.value)||20));
+  T.secs=Math.max(3,Math.min(120,parseInt(el.secs.value)||20));
+  T.topics=parseTopics();
+  T.cur=1; T.left=T.secs; T.running=true; T.paused=false;
+  el.sec.textContent=T.left;
+  showCue(); updateRing();
+  el.start.disabled=true; el.pause.disabled=false; el.stop.disabled=false;
+  ac(); S.advance();
+  T.id=setInterval(tickSecond,1000);
+}
+function pauseTimer(){
+  if(!T.running) return;
+  clearInterval(T.id); T.paused=true;
+  el.start.disabled=false; el.start.textContent="▶ 繼續"; el.pause.disabled=true;
+  S.click();
+}
+function stopTimer(silent){
+  clearInterval(T.id);
+  T.running=false; T.paused=false; T.cur=1; T.left=T.secs;
+  el.sec.textContent=T.secs; el.ring.style.strokeDashoffset=0;
+  el.slide.textContent="第 1 / "+T.slides+" 張";
+  el.start.disabled=false; el.start.textContent="▶ 開始";
+  el.pause.disabled=true; el.stop.disabled=true;
+  el.prog.style.width="0";
+  if(!silent){ el.topic.textContent="已停止。準備好再按「開始」！"; el.next.textContent=""; }
+}
+function finishTimer(){
+  clearInterval(T.id);
+  const done=T.slides, secs=T.secs, total=done*secs;
+  const mm=Math.floor(total/60), ss=total%60;
+  stopTimer(true);
+  el.topic.textContent="🎉 完成！你剛跑完一整場！";
+  el.next.textContent="共 "+done+" 張 × "+secs+" 秒 = "+mm+" 分 "+ss+" 秒";
+  el.prog.style.width="100%";
+  S.done(); confetti();
+  logEvent("practice","完成練習："+done+"張×"+secs+"秒（"+mm+"分"+ss+"秒）");
+  toast("練習完成！已記錄到學習歷程 🎉");
+}
+el.start.addEventListener("click",startTimer);
+el.pause.addEventListener("click",pauseTimer);
+el.stop.addEventListener("click",()=>{stopTimer(false);S.click();});
+document.getElementById("resetDefault").addEventListener("click",()=>{el.slides.value=20;el.secs.value=20;S.click();toast("已設定為 20 張 × 20 秒");});
+document.getElementById("clearTopics").addEventListener("click",()=>{el.input.value="";S.click();});
+document.getElementById("loadDemo").addEventListener("click",()=>{
+  el.input.value=[
+    "開場：你上台會緊張嗎？（舉手互動）",
+    "我的故事：第一次上台的糗事",
+    "問題：為什麼我們怕上台？",
+    "重點一：先想清楚核心訊息",
+    "重點一例子：一句話講完你的主題",
+    "重點二：投影片少字多圖",
+    "壞例子 vs 好例子（對比圖）",
+    "重點二示範：把一段字變成一張圖",
+    "重點三：用聲音和停頓抓注意",
+    "示範停頓的威力",
+    "眼神接觸小技巧",
+    "肢體語言：站姿與手勢",
+    "克服緊張：深呼吸 + 練習",
+    "PechaKucha 是什麼？20×20",
+    "為什麼 20 秒這麼神奇",
+    "練習方法：跟著計時器",
+    "我的進步：練習前 vs 後",
+    "給同學的三個提醒",
+    "回到核心訊息（呼應開頭）",
+    "結尾：謝謝＋一句金句"
+  ].join("\n");
+  S.save(); toast("已載入 20 張示範大綱 ✨");
+});
+
+/* ---------- 測驗 ---------- */
+const QUESTIONS=[
+  {q:"PechaKucha 的標準格式是幾張投影片、每張幾秒？",
+   opts:["10 張，每張 30 秒","20 張，每張 20 秒","15 張，每張 15 秒","30 張，每張 10 秒"],a:1,
+   ex:"PechaKucha 的招牌就是「20×20」：剛好 20 張投影片，每張自動播放 20 秒。"},
+  {q:"一場完整的 PechaKucha 報告總長是多少？",
+   opts:["3 分 20 秒","5 分整","6 分 40 秒","10 分整"],a:2,
+   ex:"20 張 × 20 秒 = 400 秒 = 6 分 40 秒。"},
+  {q:"PechaKucha 這種格式最早在哪裡誕生？",
+   opts:["美國紐約","日本東京","英國倫敦","法國巴黎"],a:1,
+   ex:"2003 年由 Astrid Klein 與 Mark Dytham 在日本東京發明。"},
+  {q:"「ペチャクチャ（PechaKucha）」在日文裡是什麼意思？",
+   opts:["快速的意思","嘰嘰喳喳、閒聊","發表會","二十的意思"],a:1,
+   ex:"名字取自日文「閒聊、嘰嘰喳喳」的聲音，呼應輕快像聊天的分享感。"},
+  {q:"投影片設計最重要的原則是？",
+   opts:["每頁盡量塞滿資訊","一頁一個重點","字越多越專業","用很多不同字型"],a:1,
+   ex:"一頁一個重點，聽眾才能一眼抓到你要說什麼。"},
+  {q:"關於投影片上的文字，正確的做法是？",
+   opts:["整段講稿都打上去","字小一點才放得多","少字、字要大","用最花俏的顏色"],a:2,
+   ex:"投影片不是講稿。用少量關鍵字＋大字級，最後一排也看得到。"},
+  {q:"上台時，眼神應該放在哪裡？",
+   opts:["一直盯著投影幕","低頭看講稿就好","看向並輪流接觸聽眾","閉著眼睛比較不緊張"],a:2,
+   ex:"與聽眾眼神接觸，會顯得自信又真誠，也能抓住他們的注意力。"},
+  {q:"克服上台緊張，最有效的方法是？",
+   opts:["前一晚熬夜猛背","充分練習到熟練","盡量講快一點趕快結束","完全不準備靠臨場"],a:1,
+   ex:"練得夠熟，緊張就會變成專注的能量；再搭配深呼吸效果更好。"},
+  {q:"簡報「開頭」最重要的任務是什麼？",
+   opts:["先自我介紹十分鐘","抓住聽眾的注意力","把所有結論先講完","唸出所有參考資料"],a:1,
+   ex:"開頭用問句、故事或驚人數字抓住注意力，聽眾才會想繼續聽。"},
+  {q:"在 PechaKucha 中，投影片是怎麼換頁的？",
+   opts:["講者手動按下一頁","每 20 秒自動換頁","由聽眾投票決定","隨機跳頁"],a:1,
+   ex:"投影片每 20 秒自動換頁，講者必須跟上節奏，這正是它的挑戰與魅力。"}
+];
+let quiz={i:0,score:0,order:[]};
+const qIntro=document.getElementById("quizIntro");
+const qBody=document.getElementById("quizBody");
+const qResult=document.getElementById("quizResult");
+const qProg=document.getElementById("qProgress");
+
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=(Math.random()*(i+1))|0;[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+document.getElementById("startQuiz").addEventListener("click",()=>{
+  quiz={i:0,score:0,order:shuffle(QUESTIONS.map((_,i)=>i))};
+  qIntro.style.display="none"; qResult.style.display="none"; qBody.style.display="block";
+  ac(); S.click(); renderQ();
+});
+function renderQ(){
+  const qi=quiz.order[quiz.i], Q=QUESTIONS[qi];
+  qProg.textContent="第 "+(quiz.i+1)+" / "+quiz.order.length+" 題　得分 "+quiz.score;
+  const keys=["A","B","C","D"];
+  qBody.innerHTML=`
+    <div class="q-card">
+      <div class="q-num">${quiz.i+1}</div>
+      <div class="q-text">${Q.q}</div>
+      <div class="opts" id="opts">
+        ${Q.opts.map((o,idx)=>`<button class="opt" data-idx="${idx}"><span class="key">${keys[idx]}</span><span>${o}</span></button>`).join("")}
+      </div>
+      <div class="explain" id="explain"></div>
+      <div style="margin-top:16px;text-align:right"><button class="btn violet" id="nextQ" style="display:none"></button></div>
+    </div>`;
+  const opts=[...qBody.querySelectorAll(".opt")];
+  const explain=qBody.querySelector("#explain");
+  const nextBtn=qBody.querySelector("#nextQ");
+  opts.forEach(btn=>btn.addEventListener("click",()=>{
+    const idx=+btn.dataset.idx;
+    opts.forEach(b=>b.disabled=true);
+    if(idx===Q.a){ btn.classList.add("correct"); quiz.score++; S.right(); }
+    else{ btn.classList.add("wrong"); opts[Q.a].classList.add("correct"); S.wrong(); }
+    explain.innerHTML=(idx===Q.a?"✅ <b>答對了！</b> ":"💡 <b>正解："+keys[Q.a]+"</b>　")+Q.ex;
+    explain.classList.add("show");
+    qProg.textContent="第 "+(quiz.i+1)+" / "+quiz.order.length+" 題　得分 "+quiz.score;
+    nextBtn.style.display="inline-flex";
+    nextBtn.textContent=(quiz.i<quiz.order.length-1)?"下一題 ▶":"看結果 🎉";
+  }));
+  nextBtn.addEventListener("click",()=>{
+    S.click();
+    if(quiz.i<quiz.order.length-1){ quiz.i++; renderQ(); }
+    else finishQuiz();
+  });
+}
+function finishQuiz(){
+  qBody.style.display="none"; qResult.style.display="block";
+  const total=quiz.order.length, score=quiz.score, pct=Math.round(score/total*100);
+  let msg,emoji;
+  if(pct===100){msg="滿分！你完全掌握了！";emoji="🏆";}
+  else if(pct>=80){msg="表現超棒，準備上台沒問題！";emoji="🌟";}
+  else if(pct>=60){msg="不錯喔！再複習幾個重點會更穩。";emoji="👍";}
+  else{msg="別灰心，回去看看單元再挑戰一次！";emoji="💪";}
+  const R=52, C=2*Math.PI*R, off=C*(1-pct/100);
+  qResult.innerHTML=`
+    <div class="quiz-result">
+      <div style="font-size:3rem">${emoji}</div>
+      <div class="score-ring">
+        <svg viewBox="0 0 120 120" width="180" height="180">
+          <circle cx="60" cy="60" r="${R}" fill="none" stroke="var(--violet-soft)" stroke-width="12"/>
+          <circle cx="60" cy="60" r="${R}" fill="none" stroke="url(#grad2)" stroke-width="12" stroke-linecap="round"
+            stroke-dasharray="${C.toFixed(1)}" stroke-dashoffset="${off.toFixed(1)}"/>
+          <defs><linearGradient id="grad2" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#ff4d79"/><stop offset="100%" stop-color="#7c4dff"/></linearGradient></defs>
+        </svg>
+        <div class="center">${pct}<span style="font-size:1.1rem">%</span></div>
+      </div>
+      <h2 style="margin:6px 0">${score} / ${total} 題答對</h2>
+      <p style="color:var(--ink-soft);font-size:1.15rem;margin-bottom:20px">${msg}</p>
+      <button class="btn violet" id="retry">🔁 再測一次</button>
+      <button class="btn ghost" data-goto="history">📊 看學習歷程</button>
+    </div>`;
+  qResult.querySelector("#retry").addEventListener("click",()=>{
+    qResult.style.display="none"; qIntro.style.display="block"; qProg.textContent=""; S.click();
+  });
+  qResult.querySelector("[data-goto]").addEventListener("click",()=>goTab("history"));
+  logEvent("quiz","完成測驗，答對 "+score+" / "+total+" 題",pct);
+  S.done(); if(pct>=60) confetti();
+  toast("測驗完成，成績已記錄！"+emoji);
+}
+
+/* ---------- 學習歷程渲染 ---------- */
+function renderHistory(){
+  const h=loadHist();
+  const readN=h.filter(x=>x.type==="read").length;
+  const pracN=h.filter(x=>x.type==="practice").length;
+  const quizArr=h.filter(x=>x.type==="quiz");
+  const best=quizArr.length?Math.max(...quizArr.map(x=>x.score||0)):null;
+  document.getElementById("statRead").textContent=readN;
+  document.getElementById("statPractice").textContent=pracN;
+  document.getElementById("statQuiz").textContent=quizArr.length;
+  document.getElementById("statBest").textContent=(best===null?"—":best+"%");
+  const area=document.getElementById("histArea");
+  if(!h.length){
+    area.innerHTML='<div class="empty"><span class="em">🌱</span>還沒有紀錄喔！<br>去讀單元、做練習或測驗，這裡就會長出你的學習軌跡。</div>';
+    return;
+  }
+  const label={read:'<span class="medal read">📖 閱讀</span>',practice:'<span class="medal practice">⏱️ 練習</span>',quiz:'<span class="medal quiz">✏️ 測驗</span>'};
+  area.innerHTML='<div class="table-scroll"><table><thead><tr><th>時間</th><th>類型</th><th>內容</th><th>分數</th></tr></thead><tbody>'+
+    h.map(x=>`<tr><td style="white-space:nowrap">${x.time}</td><td>${label[x.type]||x.type}</td><td>${x.detail}</td><td>${x.score===null?"—":x.score+"%"}</td></tr>`).join("")+
+    '</tbody></table></div>';
+}
+
+/* ---------- 下載工具 ---------- */
+function download(filename, content, mime){
+  const blob=new Blob([content],{type:mime});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url; a.download=filename; document.body.appendChild(a); a.click();
+  document.body.removeChild(a); URL.revokeObjectURL(url);
+}
+document.getElementById("dlCsv").addEventListener("click",()=>{
+  const h=loadHist();
+  if(!h.length){toast("目前沒有紀錄可以下載");return;}
+  const typeMap={read:"閱讀",practice:"練習",quiz:"測驗"};
+  let csv="\uFEFF時間,類型,內容,分數\n";
+  h.forEach(x=>{csv+=`"${x.time}","${typeMap[x.type]||x.type}","${(x.detail||"").replace(/"/g,'""')}","${x.score===null?"":x.score+"%"}"\n`;});
+  download("簡報學習歷程_"+dateStamp()+".csv",csv,"text/csv;charset=utf-8");
+  S.save(); toast("CSV 已下載 ⬇️");
+});
+document.getElementById("dlTxt").addEventListener("click",()=>{
+  const h=loadHist();
+  if(!h.length){toast("目前沒有紀錄可以下載");return;}
+  const typeMap={read:"閱讀",practice:"練習",quiz:"測驗"};
+  let t="簡報力 · PechaKucha　學習歷程\n產生時間："+new Date().toLocaleString("zh-TW")+"\n"+"=".repeat(40)+"\n\n";
+  h.forEach((x,i)=>{t+=(i+1)+". ["+(typeMap[x.type]||x.type)+"] "+x.time+"\n   "+x.detail+(x.score!==null?"（"+x.score+"%）":"")+"\n\n";});
+  download("簡報學習歷程_"+dateStamp()+".txt",t,"text/plain;charset=utf-8");
+  S.save(); toast("文字檔已下載 ⬇️");
+});
+document.getElementById("clearHist").addEventListener("click",()=>{
+  if(!loadHist().length){toast("目前沒有紀錄");return;}
+  if(confirm("確定要清除所有學習紀錄嗎？此動作無法復原。")){
+    mem.data=[]; saveHist();
+    try{localStorage.removeItem("pk2020_read");}catch(e){}
+    readSet.clear();
+    document.querySelectorAll(".done-btn").forEach(b=>{b.disabled=false;b.textContent="✅ 我讀完了";b.classList.add("teal");b.classList.remove("ghost");});
+    renderHistory(); S.click(); toast("已清除全部紀錄");
+  }
+});
+function dateStamp(){const d=new Date();return d.getFullYear()+""+String(d.getMonth()+1).padStart(2,"0")+String(d.getDate()).padStart(2,"0");}
+
+/* ---------- 下載為 Word 文件 ---------- */
+function buildWord(){
+  const h=loadHist();
+  const typeMap={read:"閱讀",practice:"練習",quiz:"測驗"};
+  const histRows = h.length
+    ? h.map(x=>`<tr><td>${x.time}</td><td>${typeMap[x.type]||x.type}</td><td>${x.detail}</td><td>${x.score===null?"—":x.score+"%"}</td></tr>`).join("")
+    : `<tr><td colspan="4">（尚無學習紀錄）</td></tr>`;
+  const css=`
+    body{font-family:"Microsoft JhengHei","PMingLiU",sans-serif;font-size:12pt;line-height:1.7;color:#1c1740}
+    h1{color:#7c4dff;font-size:24pt;border-bottom:3px solid #ff4d79;padding-bottom:6px}
+    h2{color:#2f86ff;font-size:17pt;margin-top:22px;border-left:6px solid #00c2b0;padding-left:10px}
+    h3{color:#ff4d79;font-size:14pt;margin-top:14px}
+    li{margin-bottom:6px}
+    .tip{background:#fff3d1;border-left:5px solid #ffc531;padding:8px 12px;margin:10px 0}
+    table{border-collapse:collapse;width:100%;margin-top:8px}
+    th,td{border:1px solid #b9a8ff;padding:6px 10px;font-size:11pt;text-align:left}
+    th{background:#eae1ff;color:#7c4dff}
+    .meta{color:#4a4370;font-size:10pt}`;
+  const body=`
+    <h1>簡報力 · PechaKucha 20×20 學習手冊</h1>
+    <p class="meta">給高中生的上台必修課　|　產生時間：${new Date().toLocaleString("zh-TW")}</p>
+
+    <h2>一、什麼是 PechaKucha？</h2>
+    <p>PechaKucha（日文「ペチャクチャ」，意為「嘰嘰喳喳、閒聊」）是一種簡報格式：<b>剛好 20 張投影片，每張自動播放 20 秒</b>，全程 6 分 40 秒。由 Astrid Klein 與 Mark Dytham 於 2003 年在日本東京發明。時間固定、視覺主導，能逼講者把內容精煉、練出穩定節奏。</p>
+    <div class="tip">換算：20 張 × 20 秒 = 400 秒 = 6 分 40 秒。</div>
+
+    <h2>二、準備篇：上台前先想清楚</h2>
+    <ul>
+      <li><b>認識聽眾：</b>他們是誰、已知多少、想聽什麼。</li>
+      <li><b>設定核心訊息：</b>聽眾聽完只要記得哪一句話？整份簡報繞著它走。</li>
+      <li><b>三段式結構：</b>開頭抓注意 → 中間 2～3 個重點 → 結尾強力收尾並呼應核心。</li>
+      <li><b>用故事包裝：</b>人們記得故事，而非條列。</li>
+    </ul>
+
+    <h2>三、投影片設計：越乾淨越專業</h2>
+    <ul>
+      <li><b>一頁一個重點：</b>兩件事就拆兩張。</li>
+      <li><b>少字、大字：</b>投影片不是講稿，用關鍵字＋大字級。</li>
+      <li><b>用高品質的圖：</b>一張好圖勝過千言萬語。</li>
+      <li><b>風格一致：</b>2～3 個主色、統一字型、足夠對比。</li>
+      <li><b>善用留白：</b>不要塞滿，重點才突出。</li>
+    </ul>
+
+    <h2>四、上台表達：讓人想聽下去</h2>
+    <ul>
+      <li><b>眼神接觸：</b>看向並輪流接觸聽眾。</li>
+      <li><b>站姿與肢體：</b>站穩、朝向聽眾、手勢自然。</li>
+      <li><b>聲音三要素：</b>音量夠、速度適中、善用停頓。</li>
+      <li><b>把緊張變能量：</b>深呼吸＋充分練習。</li>
+      <li><b>少用口頭禪：</b>與其「呃、然後」不如安靜停頓。</li>
+    </ul>
+
+    <h2>五、PechaKucha 篇：20×20 的魔法</h2>
+    <ul>
+      <li><b>格式：</b>20 張 × 每張 20 秒，投影片自動換頁。</li>
+      <li><b>起源：</b>2003 年東京，Klein 與 Dytham。</li>
+      <li><b>名稱：</b>日文「閒聊」的聲音。</li>
+      <li><b>特色：</b>視覺主導、少字、節奏就是一切。</li>
+      <li><b>練習：</b>每張想好一句主軸，練到能自然在 20 秒講完並接下一張。</li>
+    </ul>
+
+    <h2>六、我的學習歷程</h2>
+    <p class="meta">已讀單元 ${h.filter(x=>x.type==="read").length} 個　|　練習 ${h.filter(x=>x.type==="practice").length} 次　|　測驗 ${h.filter(x=>x.type==="quiz").length} 次</p>
+    <table><thead><tr><th>時間</th><th>類型</th><th>內容</th><th>分數</th></tr></thead><tbody>${histRows}</tbody></table>
+  `;
+  return `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+    <head><meta charset="utf-8"><title>簡報力學習手冊</title><style>${css}</style></head>
+    <body>${body}</body></html>`;
+}
+document.getElementById("wordBtn").addEventListener("click",()=>{
+  download("簡報力_PechaKucha學習手冊_"+dateStamp()+".doc",buildWord(),"application/msword");
+  S.save(); toast("Word 文件已下載 📄");
+});
+
+/* ---------- 初始化 ---------- */
+renderHistory();
+document.querySelectorAll("[data-goto]").forEach(b=>{
+  if(!b.dataset.bound){ b.dataset.bound="1"; }
+});
+window.addEventListener("keydown",e=>{
+  if(e.code==="Space" && document.getElementById("tab-practice").classList.contains("active")){
+    const tag=(e.target.tagName||"").toLowerCase();
+    if(tag!=="textarea"&&tag!=="input"){ e.preventDefault(); T.running&&!T.paused?pauseTimer():startTimer(); }
+  }
+});
+</script>
+</body>
+</html>

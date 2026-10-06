@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>簡報快手 · PechaKucha 互動學堂</title>
+<style>
+:root{
+  --ink:#182848;
+  --ink-soft:#3d4d75;
+  --paper:#FFFDF5;
+  --paper-2:#FFF4E0;
+  --coral:#FF6B4A;
+  --coral-d:#E8532F;
+  --sun:#FFC93C;
+  --teal:#16BAC5;
+  --teal-d:#0E9AA3;
+  --grape:#7C5CFC;
+  --pink:#FF7AB6;
+  --mint:#2EE6A8;
+  --shadow:0 10px 0 rgba(24,40,72,.12);
+  --shadow-sm:0 6px 0 rgba(24,40,72,.10);
+  --r:22px;
+  --font:"PingFang TC","Microsoft JhengHei","Heiti TC","Noto Sans TC","Segoe UI",sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--font);
+  background:var(--paper);
+  color:var(--ink);
+  font-size:18px;
+  line-height:1.7;
+  overflow-x:hidden;
+  -webkit-text-size-adjust:100%;
+}
+body::before{
+  content:"";position:fixed;inset:0;z-index:-2;
+  background:
+    radial-gradient(circle at 12% 18%, rgba(255,201,60,.18), transparent 40%),
+    radial-gradient(circle at 88% 12%, rgba(124,92,252,.14), transparent 42%),
+    radial-gradient(circle at 78% 88%, rgba(22,186,197,.16), transparent 44%),
+    radial-gradient(circle at 20% 82%, rgba(255,122,182,.14), transparent 42%),
+    var(--paper);
+}
+img,svg{max-width:100%}
+h1,h2,h3{line-height:1.25;letter-spacing:.5px}
+button{font-family:var(--font);cursor:pointer;border:none;background:none}
+a{color:inherit}
+
+/* ============ 頂部導覽 ============ */
+header#topbar{
+  position:sticky;top:0;z-index:100;
+  background:rgba(255,253,245,.92);
+  backdrop-filter:blur(10px);
+  border-bottom:4px solid var(--ink);
+}
+.nav-wrap{max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:12px;padding:10px 16px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:900;font-size:1.25rem;white-space:nowrap}
+.brand .logo{width:38px;height:38px;flex:none}
+.nav-scroll{display:flex;gap:6px;overflow-x:auto;flex:1;padding:4px 0;scrollbar-width:none}
+.nav-scroll::-webkit-scrollbar{display:none}
+.nav-btn{
+  white-space:nowrap;padding:9px 16px;border-radius:999px;font-weight:800;font-size:1rem;
+  color:var(--ink-soft);border:2.5px solid transparent;transition:.18s;
+}
+.nav-btn:hover{background:var(--paper-2)}
+.nav-btn.active{background:var(--ink);color:#fff}
+.sound-toggle{
+  flex:none;width:44px;height:44px;border-radius:50%;border:3px solid var(--ink);
+  background:var(--sun);font-size:1.2rem;display:grid;place-items:center;transition:.15s;
+}
+.sound-toggle:active{transform:scale(.9)}
+.sound-toggle.muted{background:#e5e5e5;filter:grayscale(1)}
+
+/* ============ 版面容器 ============ */
+main{max-width:1100px;margin:0 auto;padding:0 16px 90px}
+.view{display:none;animation:fadeUp .5s ease}
+.view.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+
+.section-eyebrow{
+  display:inline-block;background:var(--grape);color:#fff;font-weight:900;
+  padding:5px 16px;border-radius:999px;font-size:.95rem;letter-spacing:2px;margin-bottom:14px;
+}
+.section-title{font-size:2rem;font-weight:900;margin-bottom:8px}
+.section-sub{color:var(--ink-soft);font-size:1.05rem;margin-bottom:26px;max-width:720px}
+
+/* ============ Hero ============ */
+.hero{padding:54px 0 34px;text-align:center;position:relative}
+.hero h1{
+  font-size:clamp(2.4rem,7vw,4.4rem);font-weight:900;letter-spacing:1px;
+  line-height:1.1;margin-bottom:16px;
+}
+.hero h1 .hl{
+  background:linear-gradient(120deg,var(--coral),var(--pink));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  position:relative;white-space:nowrap;
+}
+.hero p.lead{font-size:clamp(1.05rem,2.6vw,1.35rem);color:var(--ink-soft);max-width:640px;margin:0 auto 10px;font-weight:600}
+.pk-badge{
+  display:inline-flex;align-items:center;gap:10px;background:var(--ink);color:#fff;
+  border-radius:999px;padding:10px 22px;font-weight:900;font-size:1.1rem;margin:18px 0 8px;
+  box-shadow:var(--shadow-sm);
+}
+.pk-badge b{color:var(--sun);font-size:1.35rem}
+.hero-cta{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:26px}
+
+/* 節奏光點 signature */
+.rhythm{
+  display:grid;grid-template-columns:repeat(10,1fr);gap:8px;max-width:420px;margin:34px auto 6px;
+}
+.rhythm i{
+  aspect-ratio:1;border-radius:50%;background:var(--paper-2);
+  border:2.5px solid var(--ink);display:block;
+}
+.rhythm i.on{background:var(--coral);animation:pop .4s ease}
+@keyframes pop{0%{transform:scale(.4)}60%{transform:scale(1.25)}100%{transform:scale(1)}}
+.rhythm-label{font-weight:800;color:var(--ink-soft);margin-top:6px;font-size:.95rem}
+
+/* ============ 按鈕 ============ */
+.btn{
+  display:inline-flex;align-items:center;gap:9px;font-weight:900;font-size:1.08rem;
+  padding:14px 26px;border-radius:16px;border:3px solid var(--ink);
+  background:var(--sun);color:var(--ink);box-shadow:var(--shadow-sm);transition:.12s;
+}
+.btn:hover{transform:translateY(-2px);box-shadow:0 9px 0 rgba(24,40,72,.14)}
+.btn:active{transform:translateY(3px);box-shadow:0 2px 0 rgba(24,40,72,.14)}
+.btn.coral{background:var(--coral);color:#fff}
+.btn.teal{background:var(--teal);color:#fff}
+.btn.grape{background:var(--grape);color:#fff}
+.btn.ghost{background:#fff}
+.btn.sm{padding:9px 16px;font-size:.98rem;border-radius:12px}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:var(--shadow-sm)}
+
+/* ============ 卡片 ============ */
+.card{
+  background:#fff;border:3px solid var(--ink);border-radius:var(--r);
+  padding:24px;box-shadow:var(--shadow);
+}
+.grid{display:grid;gap:20px}
+.grid.c2{grid-template-columns:repeat(2,1fr)}
+.grid.c3{grid-template-columns:repeat(3,1fr)}
+.grid.c4{grid-template-columns:repeat(4,1fr)}
+
+/* 技巧卡 */
+.skill-card{
+  background:#fff;border:3px solid var(--ink);border-radius:var(--r);overflow:hidden;
+  box-shadow:var(--shadow);transition:.15s;cursor:pointer;display:flex;flex-direction:column;
+}
+.skill-card:hover{transform:translateY(-4px)}
+.skill-top{padding:20px 20px 14px;display:flex;align-items:center;gap:14px}
+.skill-ico{width:56px;height:56px;flex:none;border-radius:16px;display:grid;place-items:center;font-size:1.7rem;border:3px solid var(--ink)}
+.skill-card h3{font-size:1.2rem;font-weight:900}
+.skill-num{font-size:.85rem;font-weight:900;color:#fff;background:var(--ink);border-radius:8px;padding:2px 8px;margin-left:auto}
+.skill-body{padding:0 20px 22px;color:var(--ink-soft);font-size:1rem}
+.skill-body ul{margin:10px 0 0;padding-left:20px}
+.skill-body li{margin:6px 0}
+.skill-tag{display:inline-block;background:var(--paper-2);border:2px solid var(--ink);border-radius:999px;padding:3px 12px;font-size:.85rem;font-weight:800;margin:12px 6px 0 0}
+
+/* PechaKucha 說明 */
+.pk-hero{
+  background:linear-gradient(135deg,var(--grape),var(--teal));color:#fff;
+  border:3px solid var(--ink);border-radius:var(--r);padding:30px;box-shadow:var(--shadow);
+  display:grid;grid-template-columns:1.4fr 1fr;gap:24px;align-items:center;
+}
+.pk-hero h3{font-size:1.6rem;margin-bottom:10px}
+.pk-hero p{opacity:.95;font-size:1.05rem}
+.pk-stats{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.pk-stat{background:rgba(255,255,255,.16);border:2px solid rgba(255,255,255,.5);border-radius:16px;padding:14px;text-align:center}
+.pk-stat b{display:block;font-size:2rem;font-weight:900;color:var(--sun)}
+.pk-stat span{font-size:.9rem;font-weight:700}
+.fact-row{display:grid;gap:16px;margin-top:22px}
+.fact{display:flex;gap:16px;align-items:flex-start;background:#fff;border:3px solid var(--ink);border-radius:18px;padding:18px;box-shadow:var(--shadow-sm)}
+.fact .n{width:44px;height:44px;flex:none;border-radius:12px;background:var(--sun);border:3px solid var(--ink);display:grid;place-items:center;font-weight:900;font-size:1.2rem}
+.fact h4{font-size:1.15rem;margin-bottom:4px}
+.fact p{color:var(--ink-soft);font-size:1rem}
+
+/* ============ AI 區 ============ */
+.ai-note{background:var(--paper-2);border:3px dashed var(--grape);border-radius:16px;padding:14px 18px;font-weight:700;color:var(--ink-soft);margin-bottom:20px;display:flex;gap:12px;align-items:center}
+.ai-note .k{font-size:1.6rem}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.tab{padding:10px 18px;border-radius:12px;font-weight:800;border:3px solid var(--ink);background:#fff;transition:.12s}
+.tab.active{background:var(--grape);color:#fff}
+.ai-panel{display:none}
+.ai-panel.active{display:block}
+textarea,input[type=text]{
+  width:100%;font-family:var(--font);font-size:1.05rem;padding:14px;border:3px solid var(--ink);
+  border-radius:14px;background:#fff;color:var(--ink);resize:vertical;
+}
+textarea:focus,input:focus{outline:4px solid var(--sun)}
+label.fld{display:block;font-weight:800;margin:0 0 8px}
+.ai-output{
+  margin-top:18px;background:var(--paper-2);border:3px solid var(--ink);border-radius:16px;
+  padding:20px;min-height:80px;white-space:pre-wrap;line-height:1.8;font-size:1.02rem;
+}
+.ai-output:empty::before{content:"AI 的回應會出現在這裡 ✨";color:var(--ink-soft);font-weight:700}
+.chat-log{display:flex;flex-direction:column;gap:12px;margin-bottom:16px;max-height:420px;overflow-y:auto;padding:4px}
+.bubble{padding:13px 17px;border-radius:16px;border:3px solid var(--ink);max-width:88%;font-size:1.02rem;line-height:1.7;white-space:pre-wrap}
+.bubble.me{align-self:flex-end;background:var(--teal);color:#fff;border-bottom-right-radius:4px}
+.bubble.ai{align-self:flex-start;background:#fff;border-bottom-left-radius:4px}
+.spinner{display:inline-block;width:20px;height:20px;border:3px solid var(--ink);border-top-color:transparent;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle}
+@keyframes spin{to{transform:rotate(360deg)}}
+.outline-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:16px}
+.outline-slide{background:#fff;border:3px solid var(--ink);border-radius:14px;padding:12px;box-shadow:var(--shadow-sm);font-size:.95rem}
+.outline-slide b{display:block;background:var(--coral);color:#fff;border-radius:8px;padding:2px 8px;font-size:.8rem;margin-bottom:8px;width:fit-content}
+
+/* ============ 練習 ============ */
+.stage{
+  background:var(--ink);border-radius:var(--r);border:3px solid var(--ink);color:#fff;
+  padding:30px;text-align:center;box-shadow:var(--shadow);position:relative;overflow:hidden;
+}
+.stage .slide-no{font-size:1.1rem;font-weight:800;color:var(--sun);letter-spacing:2px}
+.stage .slide-title{font-size:clamp(1.6rem,5vw,2.6rem);font-weight:900;margin:14px 0 20px;min-height:3rem;word-break:break-word}
+.timer-ring{position:relative;width:180px;height:180px;margin:0 auto}
+.timer-ring svg{transform:rotate(-90deg)}
+.timer-ring .num{position:absolute;inset:0;display:grid;place-items:center;font-size:3.4rem;font-weight:900}
+.prog-dots{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;margin-top:22px;max-width:520px;margin-left:auto;margin-right:auto}
+.prog-dots i{width:14px;height:14px;border-radius:50%;background:rgba(255,255,255,.22);border:2px solid rgba(255,255,255,.5)}
+.prog-dots i.done{background:var(--mint)}
+.prog-dots i.now{background:var(--sun);animation:beat .6s infinite alternate}
+@keyframes beat{to{transform:scale(1.4)}}
+.practice-ctrl{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:24px}
+.setup-row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end;margin-bottom:20px}
+.setup-row .fld-group{flex:1;min-width:180px}
+select{width:100%;font-family:var(--font);font-size:1.05rem;padding:13px;border:3px solid var(--ink);border-radius:14px;background:#fff;font-weight:700}
+.script-box{margin-top:20px}
+
+/* ============ 測驗 ============ */
+.quiz-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:20px}
+.quiz-prog{height:16px;background:var(--paper-2);border:3px solid var(--ink);border-radius:999px;overflow:hidden;flex:1;min-width:160px}
+.quiz-prog b{display:block;height:100%;background:linear-gradient(90deg,var(--coral),var(--sun));width:0;transition:.4s}
+.q-card{background:#fff;border:3px solid var(--ink);border-radius:var(--r);padding:26px;box-shadow:var(--shadow)}
+.q-text{font-size:1.35rem;font-weight:900;margin-bottom:20px;line-height:1.5}
+.opt{
+  display:block;width:100%;text-align:left;padding:16px 20px;border:3px solid var(--ink);
+  border-radius:14px;background:#fff;font-weight:700;font-size:1.05rem;margin-bottom:12px;transition:.12s;
+}
+.opt:hover:not(.locked){background:var(--paper-2);transform:translateX(4px)}
+.opt.correct{background:var(--mint);border-color:var(--ink)}
+.opt.wrong{background:#FFB4A6}
+.opt.locked{cursor:default}
+.q-explain{margin-top:14px;background:var(--paper-2);border:3px solid var(--ink);border-radius:14px;padding:14px 18px;font-weight:600;display:none}
+.q-explain.show{display:block}
+.score-ring{width:200px;height:200px;margin:10px auto;position:relative}
+.score-ring .num{position:absolute;inset:0;display:grid;place-items:center;font-size:2.6rem;font-weight:900;flex-direction:column}
+.score-ring .num small{font-size:1rem;color:var(--ink-soft)}
+
+/* ============ 學習歷程 ============ */
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:26px}
+.stat-box{background:#fff;border:3px solid var(--ink);border-radius:18px;padding:20px;text-align:center;box-shadow:var(--shadow-sm)}
+.stat-box .big{font-size:2.4rem;font-weight:900;color:var(--coral)}
+.stat-box .lbl{font-weight:800;color:var(--ink-soft);font-size:.95rem}
+.timeline{position:relative;padding-left:34px}
+.timeline::before{content:"";position:absolute;left:11px;top:6px;bottom:6px;width:4px;background:var(--ink);border-radius:2px}
+.tl-item{position:relative;margin-bottom:16px;background:#fff;border:3px solid var(--ink);border-radius:14px;padding:14px 18px;box-shadow:var(--shadow-sm)}
+.tl-item::before{content:"";position:absolute;left:-28px;top:18px;width:16px;height:16px;border-radius:50%;background:var(--sun);border:3px solid var(--ink)}
+.tl-item .when{font-size:.85rem;color:var(--ink-soft);font-weight:700}
+.tl-item .what{font-weight:800;margin-top:2px}
+.empty-note{text-align:center;color:var(--ink-soft);font-weight:700;padding:40px 20px}
+
+/* ============ 頁尾/浮動 ============ */
+.floating-dl{position:fixed;right:18px;bottom:18px;z-index:90;display:flex;flex-direction:column;gap:10px}
+.confetti{position:fixed;inset:0;pointer-events:none;z-index:200;overflow:hidden;display:none}
+.confetti.show{display:block}
+.confetti i{position:absolute;top:-20px;width:12px;height:16px;border-radius:2px;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(720deg);opacity:.9}}
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(120px);background:var(--ink);color:#fff;padding:14px 24px;border-radius:14px;font-weight:800;z-index:300;transition:.3s;box-shadow:var(--shadow)}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+footer{text-align:center;padding:30px 16px;color:var(--ink-soft);font-weight:700;font-size:.95rem}
+
+/* ============ RWD ============ */
+@media(max-width:860px){
+  .grid.c4{grid-template-columns:repeat(2,1fr)}
+  .grid.c3{grid-template-columns:repeat(2,1fr)}
+  .pk-hero{grid-template-columns:1fr}
+  .stat-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:560px){
+  body{font-size:17px}
+  .brand span{display:none}
+  .grid.c2,.grid.c3,.grid.c4{grid-template-columns:1fr}
+  .section-title{font-size:1.6rem}
+  .hero{padding:34px 0 24px}
+  .card,.stage,.q-card{padding:20px}
+  .rhythm{grid-template-columns:repeat(10,1fr);gap:5px}
+  .stat-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+
+<!-- ========== 頂部導覽 ========== -->
+<header id="topbar">
+  <div class="nav-wrap">
+    <div class="brand">
+      <svg class="logo" viewBox="0 0 40 40" fill="none">
+        <rect x="3" y="3" width="34" height="34" rx="9" fill="#FF6B4A" stroke="#182848" stroke-width="3"/>
+        <rect x="10" y="12" width="20" height="13" rx="2.5" fill="#FFFDF5" stroke="#182848" stroke-width="2.4"/>
+        <circle cx="20" cy="30.5" r="2.4" fill="#FFC93C" stroke="#182848" stroke-width="2"/>
+      </svg>
+      <span>簡報快手</span>
+    </div>
+    <nav class="nav-scroll" id="nav">
+      <button class="nav-btn active" data-view="home">🏠 首頁</button>
+      <button class="nav-btn" data-view="skills">🎤 簡報技巧</button>
+      <button class="nav-btn" data-view="pk">⏱️ 認識 PechaKucha</button>
+      <button class="nav-btn" data-view="ai">🤖 AI 教練</button>
+      <button class="nav-btn" data-view="practice">🏃 節奏練習</button>
+      <button class="nav-btn" data-view="quiz">📝 闖關測驗</button>
+      <button class="nav-btn" data-view="log">📊 學習歷程</button>
+    </nav>
+    <button class="sound-toggle" id="soundBtn" title="開關音效">🔊</button>
+  </div>
+</header>
+
+<main>
+
+<!-- ========== 首頁 ========== -->
+<section class="view active" id="view-home">
+  <div class="hero">
+    <div class="pk-badge">🇯🇵 源自東京 · <b>20 × 20</b> · 精煉表達</div>
+    <h1>用 <span class="hl">6 分 40 秒</span><br>說出打動人心的簡報</h1>
+    <p class="lead">結合上台技巧教學與 PechaKucha 節奏練習，還有 AI 教練陪你一起準備。無論教學或自學，都能反覆演練、越說越好。</p>
+    <div class="rhythm" id="heroRhythm"></div>
+    <div class="rhythm-label">20 張投影片，每張 20 秒 —— 這就是 PechaKucha 的節奏</div>
+    <div class="hero-cta">
+      <button class="btn coral" data-go="skills">開始學習技巧 →</button>
+      <button class="btn teal" data-go="ai">🤖 找 AI 教練</button>
+      <button class="btn ghost" data-go="practice">🏃 直接練習</button>
+    </div>
+  </div>
+
+  <div class="grid c3" style="margin-top:10px">
+    <div class="card" style="border-color:var(--coral)">
+      <div style="font-size:2.4rem">🎯</div>
+      <h3 style="margin:8px 0;font-size:1.25rem">學會上台技巧</h3>
+      <p style="color:var(--ink-soft)">從開場、肢體語言到有力結尾，8 大核心技巧一次掌握。</p>
+    </div>
+    <div class="card" style="border-color:var(--teal)">
+      <div style="font-size:2.4rem">🤖</div>
+      <h3 style="margin:8px 0;font-size:1.25rem">AI 個人教練</h3>
+      <p style="color:var(--ink-soft)">AI 幫你發想主題、規劃 20 張投影片、給講稿回饋，開啟即用、免登入。</p>
+    </div>
+    <div class="card" style="border-color:var(--grape)">
+      <div style="font-size:2.4rem">🏆</div>
+      <h3 style="margin:8px 0;font-size:1.25rem">練習 + 測驗</h3>
+      <p style="color:var(--ink-soft)">跟著自動換頁計時器演練，再用闖關測驗檢核學習成果。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 簡報技巧 ========== -->
+<section class="view" id="view-skills">
+  <span class="section-eyebrow">SKILLS</span>
+  <h2 class="section-title">🎤 上台簡報八大技巧</h2>
+  <p class="section-sub">點一下每張卡片看重點提示。這些技巧適用於各種上台場合，也是 PechaKucha 的基本功。</p>
+  <div class="grid c2" id="skillGrid"></div>
+</section>
+
+<!-- ========== 認識 PechaKucha ========== -->
+<section class="view" id="view-pk">
+  <span class="section-eyebrow">PECHAKUCHA</span>
+  <h2 class="section-title">⏱️ 什麼是 PechaKucha？</h2>
+  <p class="section-sub">「ペチャクチャ」在日文是「你一言我一語的閒聊」。它是一種嚴格的簡報格式，逼你把話說得又精又準。</p>
+
+  <div class="pk-hero">
+    <div>
+      <h3>20 張 × 20 秒 = 6 分 40 秒</h3>
+      <p>投影片會「自動換頁」，你無法停下來——這正是它訓練你的地方：精煉內容、掌握節奏、練到滾瓜爛熟。</p>
+    </div>
+    <div class="pk-stats">
+      <div class="pk-stat"><b>20</b><span>張投影片</span></div>
+      <div class="pk-stat"><b>20</b><span>秒 / 每張</span></div>
+      <div class="pk-stat"><b>6:40</b><span>總時長</span></div>
+      <div class="pk-stat"><b>2003</b><span>東京誕生</span></div>
+    </div>
+  </div>
+
+  <div class="fact-row" id="pkFacts"></div>
+
+  <div style="text-align:center;margin-top:26px">
+    <button class="btn coral" data-go="practice">試試 PechaKucha 節奏 →</button>
+  </div>
+</section>
+
+<!-- ========== AI 教練 ========== -->
+<section class="view" id="view-ai">
+  <span class="section-eyebrow">AI COACH</span>
+  <h2 class="section-title">🤖 你的 AI 簡報教練</h2>
+  <p class="section-sub">由 Claude AI 驅動。發想主題、規劃投影片、修講稿，隨時問隨時答。</p>
+
+  <div class="ai-note">
+    <span class="k">✨</span>
+    <span>本功能直接在 <b>Claude Artifact</b> 中執行，由 Claude AI 即時回應、無需自備金鑰。若一時沒有回應，請稍後再試一次。</span>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" data-ai="outline">🗂️ 幫我規劃 20 張</button>
+    <button class="tab" data-ai="feedback">✍️ 講稿健檢</button>
+    <button class="tab" data-ai="chat">💬 自由問答</button>
+  </div>
+
+  <!-- 大綱產生 -->
+  <div class="ai-panel active" id="ai-outline">
+    <div class="card">
+      <label class="fld" for="topicIn">你想做哪個主題的 PechaKucha？</label>
+      <input type="text" id="topicIn" placeholder="例如：我最愛的一本書、校園環保、我的家鄉…">
+      <div style="margin-top:16px"><button class="btn grape" id="genOutline">✨ 產生 20 張投影片大綱</button></div>
+      <div class="ai-output" id="outlineOut"></div>
+      <div class="outline-grid" id="outlineGrid"></div>
+    </div>
+  </div>
+
+  <!-- 講稿健檢 -->
+  <div class="ai-panel" id="ai-feedback">
+    <div class="card">
+      <label class="fld" for="scriptIn">貼上你的開場白或一段講稿，AI 幫你健檢：</label>
+      <textarea id="scriptIn" rows="5" placeholder="把你的講稿貼在這裡…"></textarea>
+      <div style="margin-top:16px"><button class="btn grape" id="genFeedback">🔍 給我具體回饋</button></div>
+      <div class="ai-output" id="feedbackOut"></div>
+    </div>
+  </div>
+
+  <!-- 自由問答 -->
+  <div class="ai-panel" id="ai-chat">
+    <div class="card">
+      <div class="chat-log" id="chatLog">
+        <div class="bubble ai">嗨！我是你的簡報教練 🎤 想問怎麼克服緊張、怎麼設計投影片、還是 PechaKucha 的技巧？儘管問我！</div>
+      </div>
+      <div style="display:flex;gap:10px">
+        <input type="text" id="chatIn" placeholder="輸入你的問題…" style="flex:1">
+        <button class="btn grape sm" id="chatSend">送出</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 節奏練習 ========== -->
+<section class="view" id="view-practice">
+  <span class="section-eyebrow">PRACTICE</span>
+  <h2 class="section-title">🏃 PechaKucha 節奏練習</h2>
+  <p class="section-sub">投影片會自動換頁，跟著節奏開口說。可以自訂張數，重複演練到熟練為止。</p>
+
+  <div id="practiceSetup">
+    <div class="card">
+      <div class="setup-row">
+        <div class="fld-group">
+          <label class="fld">投影片張數</label>
+          <select id="slideCount">
+            <option value="5">快速練習 · 5 張（1:40）</option>
+            <option value="10">半場 · 10 張（3:20）</option>
+            <option value="20" selected>完整 PechaKucha · 20 張（6:40）</option>
+          </select>
+        </div>
+        <div class="fld-group">
+          <label class="fld">每張秒數</label>
+          <select id="secPer">
+            <option value="20" selected>20 秒（標準）</option>
+            <option value="15">15 秒（進階）</option>
+            <option value="10">10 秒（挑戰）</option>
+          </select>
+        </div>
+      </div>
+      <label class="fld">投影片標題（選填，一行一張；留空會用預設）</label>
+      <textarea id="slideTitles" rows="4" placeholder="開場：我是誰&#10;重點一：…&#10;重點二：…&#10;結尾：謝謝大家"></textarea>
+      <div style="margin-top:8px;color:var(--ink-soft);font-weight:700;font-size:.95rem">💡 小技巧：可以先到「AI 教練」產生大綱，再複製過來練習。</div>
+      <div style="margin-top:18px;display:flex;gap:12px;flex-wrap:wrap">
+        <button class="btn coral" id="startPractice">▶ 開始演練</button>
+        <button class="btn ghost sm" id="fillDemo">用範例填入</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="practiceStage" style="display:none">
+    <div class="stage">
+      <div class="slide-no" id="slideNo">投影片 1 / 20</div>
+      <div class="slide-title" id="slideTitle">準備好了嗎？</div>
+      <div class="timer-ring">
+        <svg width="180" height="180" viewBox="0 0 180 180">
+          <circle cx="90" cy="90" r="80" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="14"/>
+          <circle id="ringProg" cx="90" cy="90" r="80" fill="none" stroke="#FFC93C" stroke-width="14" stroke-linecap="round" stroke-dasharray="502" stroke-dashoffset="0"/>
+        </svg>
+        <div class="num" id="countNum">20</div>
+      </div>
+      <div class="prog-dots" id="progDots"></div>
+      <div class="practice-ctrl">
+        <button class="btn sm" id="pauseBtn">⏸ 暫停</button>
+        <button class="btn ghost sm" id="stopBtn">⏹ 結束</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 測驗 ========== -->
+<section class="view" id="view-quiz">
+  <span class="section-eyebrow">QUIZ</span>
+  <h2 class="section-title">📝 簡報闖關測驗</h2>
+  <p class="section-sub">10 道題目，檢核你對簡報技巧和 PechaKucha 的理解。作答後會立即看到解說。</p>
+
+  <div id="quizIntro">
+    <div class="card" style="text-align:center">
+      <div style="font-size:3rem">🏁</div>
+      <h3 style="margin:10px 0;font-size:1.4rem">準備好挑戰了嗎？</h3>
+      <p style="color:var(--ink-soft);margin-bottom:20px">共 10 題，每題答完會顯示正確解答與說明。</p>
+      <button class="btn coral" id="startQuiz">開始測驗 →</button>
+    </div>
+  </div>
+
+  <div id="quizArea" style="display:none">
+    <div class="quiz-head">
+      <div class="quiz-prog"><b id="quizBar"></b></div>
+      <div style="font-weight:900" id="quizCount">1 / 10</div>
+    </div>
+    <div class="q-card">
+      <div class="q-text" id="qText"></div>
+      <div id="qOpts"></div>
+      <div class="q-explain" id="qExplain"></div>
+      <div style="text-align:right;margin-top:16px">
+        <button class="btn sm" id="nextQ" style="display:none">下一題 →</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="quizResult" style="display:none">
+    <div class="card" style="text-align:center">
+      <div class="score-ring">
+        <svg width="200" height="200" viewBox="0 0 200 200" style="transform:rotate(-90deg)">
+          <circle cx="100" cy="100" r="86" fill="none" stroke="var(--paper-2)" stroke-width="16"/>
+          <circle id="scoreRing" cx="100" cy="100" r="86" fill="none" stroke="var(--coral)" stroke-width="16" stroke-linecap="round" stroke-dasharray="540" stroke-dashoffset="540" style="transition:1s"/>
+        </svg>
+        <div class="num"><span id="scoreNum">0</span><small>分 / 100</small></div>
+      </div>
+      <h3 id="scoreMsg" style="font-size:1.5rem;margin:6px 0"></h3>
+      <p style="color:var(--ink-soft);margin-bottom:20px" id="scoreDetail"></p>
+      <button class="btn coral" id="retryQuiz">再挑戰一次 🔁</button>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 學習歷程 ========== -->
+<section class="view" id="view-log">
+  <span class="section-eyebrow">PORTFOLIO</span>
+  <h2 class="section-title">📊 我的學習歷程</h2>
+  <p class="section-sub">自動記錄你的學習足跡。可下載成紀錄檔，也能把整個課程下載成 Word 文件。</p>
+
+  <div class="stat-grid" id="statGrid"></div>
+
+  <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:24px">
+    <button class="btn teal sm" id="dlLog">⬇ 下載學習紀錄（.txt）</button>
+    <button class="btn grape sm" id="dlWord">⬇ 下載整份課程（Word）</button>
+    <button class="btn ghost sm" id="clearLog">🗑 清除紀錄</button>
+  </div>
+
+  <h3 style="margin-bottom:14px;font-size:1.25rem">🕓 學習足跡</h3>
+  <div id="timeline"></div>
+</section>
+
+</main>
+
+<!-- 浮動下載按鈕 -->
+<div class="floating-dl">
+  <button class="btn grape sm" id="floatWord" title="下載 Word">📄 Word</button>
+</div>
+
+<div class="confetti" id="confetti"></div>
+<div class="toast" id="toast"></div>
+
+<footer>
+  簡報快手 · PechaKucha 互動學堂 ｜ 為高中課堂設計 ｜ AI 功能由 Claude 提供
+</footer>
+
+<script>
+"use strict";
+
+/* ===================== 安全儲存（localStorage + 記憶體後備） ===================== */
+const Store = (function(){
+  let mem = {};
+  let ok = false;
+  try{ const k="__t"; localStorage.setItem(k,"1"); localStorage.removeItem(k); ok=true; }catch(e){ ok=false; }
+  return {
+    get(k){ try{ return ok ? localStorage.getItem(k) : (mem[k] ?? null); }catch(e){ return mem[k] ?? null; } },
+    set(k,v){ try{ ok ? localStorage.setItem(k,v) : (mem[k]=v); }catch(e){ mem[k]=v; } }
+  };
+})();
+
+/* ===================== 學習歷程 ===================== */
+const LOG_KEY = "pk_log_v1";
+function loadLog(){ try{ return JSON.parse(Store.get(LOG_KEY)||"[]"); }catch(e){ return []; } }
+function saveLog(a){ Store.set(LOG_KEY, JSON.stringify(a.slice(-200))); }
+function addLog(type, text){
+  const a = loadLog();
+  a.push({ t:Date.now(), type, text });
+  saveLog(a);
+  renderLog();
+}
+const viewedSections = new Set();
+
+/* ===================== 音效引擎（Web Audio） ===================== */
+const Sound = (function(){
+  let ctx=null, on = (Store.get("pk_sound")!=="off");
+  function ac(){ if(!ctx){ try{ ctx=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} } return ctx; }
+  function tone(freq, dur, type, vol){
+    if(!on) return; const c=ac(); if(!c) return;
+    const o=c.createOscillator(), g=c.createGain();
+    o.type=type||"sine"; o.frequency.value=freq;
+    g.gain.setValueAtTime(0, c.currentTime);
+    g.gain.linearRampToValueAtTime(vol||0.15, c.currentTime+0.01);
+    g.gain.exponentialRampToValueAtTime(0.0001, c.currentTime+dur);
+    o.connect(g); g.connect(c.destination);
+    o.start(); o.stop(c.currentTime+dur);
+  }
+  return {
+    click(){ tone(520,.08,"triangle",.12); },
+    tab(){ tone(680,.09,"sine",.12); },
+    tick(){ tone(880,.04,"square",.05); },
+    whoosh(){ tone(300,.18,"sawtooth",.08); setTimeout(()=>tone(500,.14,"sine",.08),40); },
+    correct(){ tone(660,.12,"sine",.16); setTimeout(()=>tone(880,.16,"sine",.16),110); },
+    wrong(){ tone(200,.22,"sawtooth",.14); },
+    win(){ [523,659,784,1046].forEach((f,i)=>setTimeout(()=>tone(f,.22,"triangle",.16),i*130)); },
+    start(){ tone(440,.1,"triangle",.14); setTimeout(()=>tone(660,.14,"triangle",.14),100); },
+    toggle(){ on=!on; Store.set("pk_sound", on?"on":"off"); if(on) tone(660,.1,"sine",.14); return on; },
+    isOn(){ return on; }
+  };
+})();
+const soundBtn = document.getElementById("soundBtn");
+function refreshSoundBtn(){ const on=Sound.isOn(); soundBtn.textContent = on?"🔊":"🔇"; soundBtn.classList.toggle("muted",!on); }
+soundBtn.addEventListener("click", ()=>{ Sound.toggle(); refreshSoundBtn(); });
+refreshSoundBtn();
+
+/* ===================== Toast ===================== */
+let toastT;
+function toast(msg){
+  const el=document.getElementById("toast");
+  el.textContent=msg; el.classList.add("show");
+  clearTimeout(toastT); toastT=setTimeout(()=>el.classList.remove("show"),2200);
+}
+
+/* ===================== 導覽 ===================== */
+function showView(name){
+  document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
+  const el=document.getElementById("view-"+name);
+  if(el) el.classList.add("active");
+  document.querySelectorAll(".nav-btn").forEach(b=>b.classList.toggle("active", b.dataset.view===name));
+  window.scrollTo({top:0,behavior:"smooth"});
+  if(!viewedSections.has(name)){
+    viewedSections.add(name);
+    const labels={home:"首頁",skills:"簡報技巧",pk:"認識 PechaKucha",ai:"AI 教練",practice:"節奏練習",quiz:"闖關測驗",log:"學習歷程"};
+    if(name!=="home"&&name!=="log") addLog("view","瀏覽單元：「"+(labels[name]||name)+"」");
+  }
+}
+document.getElementById("nav").addEventListener("click", e=>{
+  const b=e.target.closest(".nav-btn"); if(!b) return; Sound.tab(); showView(b.dataset.view);
+});
+document.querySelectorAll("[data-go]").forEach(b=> b.addEventListener("click",()=>{ Sound.click(); showView(b.dataset.go); }));
+
+/* ===================== Hero 節奏動畫 ===================== */
+(function(){
+  const wrap=document.getElementById("heroRhythm");
+  for(let i=0;i<20;i++){ const d=document.createElement("i"); wrap.appendChild(d); }
+  const dots=wrap.querySelectorAll("i"); let idx=0;
+  setInterval(()=>{
+    dots.forEach(d=>d.classList.remove("on"));
+    dots[idx].classList.add("on");
+    idx=(idx+1)%dots.length;
+  },420);
+})();
+
+/* ===================== 資料：八大技巧 ===================== */
+const SKILLS=[
+  {ico:"🚀",bg:"#FFC93C",title:"抓住開場黃金 30 秒",tags:["開場"],pts:["用一個問題、故事或驚人數據破冰","前 30 秒決定觀眾要不要聽下去","避免「大家好，我今天要報告…」的平淡開場"]},
+  {ico:"🧱",bg:"#16BAC5",title:"結構清楚一條線",tags:["結構"],pts:["開場 → 三個重點 → 結尾，一條主線到底","一張投影片只講一個重點","用「首先、接著、最後」幫觀眾跟上"]},
+  {ico:"🕺",bg:"#FF7AB6",title:"肢體語言會說話",tags:["肢體"],pts:["站姿抬頭挺胸，雙腳穩定","眼神掃視全場，不要只看螢幕或天花板","手勢自然開放，別把手插口袋或抱胸"]},
+  {ico:"🎙️",bg:"#7C5CFC",title:"聲音有抑揚頓挫",tags:["聲音"],pts:["音量夠大，讓最後一排聽得到","語速不要太快，重點前後刻意停頓","關鍵字加重語氣，避免全程平板"]},
+  {ico:"🎨",bg:"#FF6B4A",title:"投影片少字多圖",tags:["視覺"],pts:["一頁一重點，字越少越好","用圖片、圖表代替整段文字","字體夠大、對比夠強，遠處也看得清"]},
+  {ico:"😌",bg:"#2EE6A8",title:"克服上台緊張",tags:["心理"],pts:["上台前深呼吸，放慢吐氣","充分練習是最有效的定心丸","把注意力放在「分享」而非「被評分」"]},
+  {ico:"🤝",bg:"#FFC93C",title:"與觀眾建立連結",tags:["互動"],pts:["適時提問或舉手互動","用「你有沒有想過…」拉近距離","觀察觀眾反應，適時調整"]},
+  {ico:"🏁",bg:"#16BAC5",title:"結尾強而有力",tags:["結尾"],pts:["呼應開場，讓內容首尾相扣","給一句好記的重點或行動呼籲","自信地說謝謝，別草草收尾"]},
+];
+(function(){
+  const g=document.getElementById("skillGrid");
+  SKILLS.forEach((s,i)=>{
+    const c=document.createElement("div"); c.className="skill-card";
+    c.innerHTML=
+      '<div class="skill-top"><div class="skill-ico" style="background:'+s.bg+'">'+s.ico+'</div>'+
+      '<h3>'+s.title+'</h3><span class="skill-num">'+(i+1<10?'0':'')+(i+1)+'</span></div>'+
+      '<div class="skill-body"><ul>'+s.pts.map(p=>'<li>'+p+'</li>').join('')+'</ul>'+
+      s.tags.map(t=>'<span class="skill-tag"># '+t+'</span>').join('')+'</div>';
+    c.addEventListener("click",()=>Sound.click());
+    g.appendChild(c);
+  });
+})();
+
+/* ===================== 資料：PechaKucha 說明 ===================== */
+const FACTS=[
+  {n:"名",h:"名字的由來",p:"「PechaKucha（ペチャクチャ）」是日文擬聲詞，形容你一言我一語的閒聊聲，唸作「配洽庫洽」。"},
+  {n:"源",h:"誕生於東京，2003",p:"由建築師 Astrid Klein 與 Mark Dytham 在東京發起，原本是讓設計師分享作品又不會講太久的活動。"},
+  {n:"規",h:"鐵一般的規則",p:"20 張投影片，每張固定顯示 20 秒後自動換頁，全長剛好 6 分 40 秒，講者無法暫停。"},
+  {n:"練",h:"為什麼適合學習",p:"自動換頁逼你精煉內容、掌握節奏、反覆練習，是訓練口語表達與視覺化思考的絕佳方式。"},
+];
+(function(){
+  const w=document.getElementById("pkFacts");
+  FACTS.forEach(f=>{
+    const d=document.createElement("div"); d.className="fact";
+    d.innerHTML='<div class="n">'+f.n+'</div><div><h4>'+f.h+'</h4><p>'+f.p+'</p></div>';
+    w.appendChild(d);
+  });
+})();
+
+/* ===================== AI 功能 ===================== */
+async function askClaude(messages, system){
+  const body={ model:"claude-sonnet-4-6", max_tokens:1000, messages };
+  if(system) body.system=system;
+  const res=await fetch("https://api.anthropic.com/v1/messages",{
+    method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(body)
+  });
+  if(!res.ok) throw new Error("HTTP "+res.status);
+  const data=await res.json();
+  return (data.content||[]).filter(x=>x.type==="text").map(x=>x.text).join("\n").trim();
+}
+function aiErr(){ return "⚠️ 暫時連不上 AI，可能是網路或流量繁忙。請稍等一下再試一次。"; }
+
+/* AI 分頁切換 */
+document.querySelectorAll(".tab").forEach(t=>{
+  t.addEventListener("click",()=>{
+    Sound.tab();
+    document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+    document.querySelectorAll(".ai-panel").forEach(x=>x.classList.remove("active"));
+    t.classList.add("active");
+    document.getElementById("ai-"+t.dataset.ai).classList.add("active");
+  });
+});
+
+/* 大綱產生 */
+document.getElementById("genOutline").addEventListener("click", async ()=>{
+  const topic=document.getElementById("topicIn").value.trim();
+  const out=document.getElementById("outlineOut");
+  const grid=document.getElementById("outlineGrid");
+  if(!topic){ toast("請先輸入主題 🙂"); return; }
+  Sound.click(); grid.innerHTML=""; out.textContent="";
+  out.innerHTML='<span class="spinner"></span> AI 正在為你規劃 20 張投影片…';
+  addLog("ai","用 AI 規劃主題：「"+topic+"」的投影片大綱");
+  try{
+    const sys="你是高中簡報課的教練。使用者會給一個 PechaKucha 主題，請規劃 20 張投影片。只輸出 JSON 陣列，不要任何多餘文字或 Markdown，格式：[{\"title\":\"投影片標題\",\"note\":\"這張要說的一句話\"}]。共 20 個元素，用繁體中文，內容適合高中生，包含開場與結尾。";
+    const txt=await askClaude([{role:"user",content:"主題："+topic}], sys);
+    const clean=txt.replace(/```json|```/g,"").trim();
+    let arr; try{ arr=JSON.parse(clean); }catch(e){ arr=null; }
+    if(Array.isArray(arr)&&arr.length){
+      out.innerHTML="✅ 完成！這是 <b>"+topic+"</b> 的 PechaKucha 大綱，往下捲動看每一張，也可以複製到「節奏練習」使用：";
+      grid.innerHTML=arr.map((s,i)=>'<div class="outline-slide"><b>#'+(i+1)+'</b>'+(s.title||"")+'<div style="color:var(--ink-soft);margin-top:6px;font-size:.9rem">'+(s.note||"")+'</div></div>').join("");
+      window._lastOutline=arr.map(s=>s.title).filter(Boolean);
+      const btn=document.createElement("button"); btn.className="btn teal sm"; btn.style.marginTop="14px";
+      btn.textContent="➡ 帶到節奏練習"; btn.onclick=()=>{ document.getElementById("slideTitles").value=window._lastOutline.join("\n"); document.getElementById("slideCount").value="20"; Sound.click(); toast("已帶入練習區！"); showView("practice"); };
+      grid.after(btn);
+    }else{
+      out.textContent=txt||"（AI 沒有回應內容，請再試一次）";
+    }
+  }catch(e){ out.textContent=aiErr(); }
+});
+
+/* 講稿健檢 */
+document.getElementById("genFeedback").addEventListener("click", async ()=>{
+  const s=document.getElementById("scriptIn").value.trim();
+  const out=document.getElementById("feedbackOut");
+  if(!s){ toast("請先貼上你的講稿 🙂"); return; }
+  Sound.click(); out.innerHTML='<span class="spinner"></span> AI 正在健檢你的講稿…';
+  addLog("ai","請 AI 健檢一段講稿");
+  try{
+    const sys="你是親切的高中簡報教練。針對學生的講稿給出鼓勵且具體的回饋。請用繁體中文，結構為：先給一句肯定；接著用『👍 做得好的地方』『🔧 可以更好的地方』兩個小標，各列 2-3 點具體建議；最後給一句打氣的話。語氣正向、簡潔。";
+    const txt=await askClaude([{role:"user",content:"這是我的講稿：\n"+s}], sys);
+    out.textContent=txt||"（AI 沒有回應，請再試一次）";
+  }catch(e){ out.textContent=aiErr(); }
+});
+
+/* 自由問答 */
+const chatLog=document.getElementById("chatLog");
+const chatHist=[];
+function pushBubble(role,text){
+  const b=document.createElement("div"); b.className="bubble "+(role==="user"?"me":"ai");
+  b.textContent=text; chatLog.appendChild(b); chatLog.scrollTop=chatLog.scrollHeight; return b;
+}
+async function sendChat(){
+  const inp=document.getElementById("chatIn"); const q=inp.value.trim(); if(!q) return;
+  Sound.click(); inp.value=""; pushBubble("user",q);
+  chatHist.push({role:"user",content:q});
+  const b=pushBubble("ai","…"); b.innerHTML='<span class="spinner"></span>';
+  addLog("ai","向 AI 教練提問：「"+q.slice(0,30)+(q.length>30?"…":"")+"」");
+  try{
+    const sys="你是高中生的簡報與 PechaKucha 教練，回答親切、鼓勵、具體、簡短（3-5 句內），使用繁體中文。";
+    const txt=await askClaude(chatHist.slice(-8), sys);
+    b.textContent=txt||"（沒有回應，請再試一次）";
+    chatHist.push({role:"assistant",content:txt});
+    Sound.correct();
+  }catch(e){ b.textContent=aiErr(); }
+  chatLog.scrollTop=chatLog.scrollHeight;
+}
+document.getElementById("chatSend").addEventListener("click", sendChat);
+document.getElementById("chatIn").addEventListener("keydown", e=>{ if(e.key==="Enter") sendChat(); });
+
+/* ===================== 節奏練習 ===================== */
+const P={ titles:[], sec:20, idx:0, remain:20, timer:null, paused:false };
+const DEMO=["開場：一個吸引人的問題","我是誰 / 今天要分享什麼","重點一：背景與動機","重點一：一個小故事","重點二：核心概念","重點二：舉例說明","重點三：實際應用","重點三：數據或證據","轉折：那又如何？","給觀眾的行動建議","有力的一句總結","結尾：呼應開場 + 謝謝"];
+
+document.getElementById("fillDemo").addEventListener("click",()=>{
+  document.getElementById("slideTitles").value=DEMO.slice(0,12).join("\n");
+  document.getElementById("slideCount").value="10";
+  Sound.click(); toast("已填入範例，可直接開始！");
+});
+
+document.getElementById("startPractice").addEventListener("click",()=>{
+  const count=parseInt(document.getElementById("slideCount").value,10);
+  P.sec=parseInt(document.getElementById("secPer").value,10);
+  const raw=document.getElementById("slideTitles").value.split("\n").map(x=>x.trim()).filter(Boolean);
+  P.titles=[];
+  for(let i=0;i<count;i++){ P.titles.push(raw[i] || ("投影片 "+(i+1))); }
+  P.idx=0;
+  document.getElementById("practiceSetup").style.display="none";
+  document.getElementById("practiceStage").style.display="block";
+  buildDots(count);
+  Sound.start();
+  addLog("practice","開始節奏練習："+count+" 張 × "+P.sec+" 秒");
+  runSlide();
+});
+
+function buildDots(n){
+  const w=document.getElementById("progDots"); w.innerHTML="";
+  for(let i=0;i<n;i++){ const d=document.createElement("i"); w.appendChild(d); }
+}
+function paintDots(){
+  const dots=document.querySelectorAll("#progDots i");
+  dots.forEach((d,i)=>{ d.className=""; if(i<P.idx)d.classList.add("done"); else if(i===P.idx)d.classList.add("now"); });
+}
+const RING_LEN=502;
+function runSlide(){
+  if(P.idx>=P.titles.length){ finishPractice(); return; }
+  P.remain=P.sec; P.paused=false;
+  document.getElementById("pauseBtn").textContent="⏸ 暫停";
+  document.getElementById("slideNo").textContent="投影片 "+(P.idx+1)+" / "+P.titles.length;
+  document.getElementById("slideTitle").textContent=P.titles[P.idx];
+  document.getElementById("countNum").textContent=P.remain;
+  paintDots();
+  Sound.whoosh();
+  clearInterval(P.timer);
+  P.timer=setInterval(tickSlide,1000);
+  updateRing();
+}
+function updateRing(){
+  const frac=P.remain/P.sec;
+  document.getElementById("ringProg").setAttribute("stroke-dashoffset", (RING_LEN*(1-frac)).toFixed(1));
+}
+function tickSlide(){
+  if(P.paused) return;
+  P.remain--;
+  document.getElementById("countNum").textContent=Math.max(P.remain,0);
+  updateRing();
+  if(P.remain<=3 && P.remain>0) Sound.tick();
+  if(P.remain<=0){ clearInterval(P.timer); P.idx++; setTimeout(runSlide,180); }
+}
+document.getElementById("pauseBtn").addEventListener("click",()=>{
+  P.paused=!P.paused; Sound.click();
+  document.getElementById("pauseBtn").textContent=P.paused?"▶ 繼續":"⏸ 暫停";
+});
+document.getElementById("stopBtn").addEventListener("click",()=>{ clearInterval(P.timer); resetPractice(); Sound.click(); });
+function resetPractice(){
+  document.getElementById("practiceStage").style.display="none";
+  document.getElementById("practiceSetup").style.display="block";
+}
+function finishPractice(){
+  clearInterval(P.timer);
+  document.getElementById("slideTitle").textContent="🎉 完成！你撐完全程了";
+  document.getElementById("countNum").textContent="✓";
+  document.getElementById("ringProg").setAttribute("stroke-dashoffset","0");
+  paintDots();
+  Sound.win(); confetti();
+  addLog("practice","完成節奏練習（"+P.titles.length+" 張）");
+  toast("太棒了！練習完成 🎉");
+  setTimeout(resetPractice,2600);
+}
+
+/* ===================== 測驗 ===================== */
+const QUESTIONS=[
+  {q:"PechaKucha 每張投影片會顯示幾秒後自動換頁？",o:["10 秒","20 秒","30 秒","不會自動換"],a:1,e:"每張固定 20 秒自動換頁，這正是 PechaKucha 訓練節奏感的關鍵。"},
+  {q:"一場標準 PechaKucha 一共有幾張投影片？",o:["10 張","15 張","20 張","不限張數"],a:2,e:"標準格式是 20 張投影片，所以叫做 20×20。"},
+  {q:"一場完整 PechaKucha 的總長度是多久？",o:["3 分 20 秒","5 分整","6 分 40 秒","10 分鐘"],a:2,e:"20 張 × 20 秒 = 400 秒 = 6 分 40 秒。"},
+  {q:"PechaKucha 這個簡報形式最早在哪裡誕生？",o:["紐約","倫敦","東京","台北"],a:2,e:"2003 年由兩位建築師在日本東京發起。"},
+  {q:"投影片設計最好的原則是？",o:["字越多越詳細越好","少字多圖，一頁一重點","整頁塞滿條列","用最小的字放最多內容"],a:1,e:"少字多圖、一頁一重點，觀眾才看得懂、聽得進。"},
+  {q:"上台前克服緊張，最有效的方法是？",o:["完全不準備靠臨場","充分且反覆的練習","把講稿全部背死","上台前才開始寫稿"],a:1,e:"充分練習能大幅提升自信、降低緊張，是最實在的定心丸。"},
+  {q:"開場的「黃金時間」大約是？",o:["前 30 秒","中間 3 分鐘","最後 1 分鐘","沒有黃金時間"],a:0,e:"前 30 秒決定觀眾要不要繼續聽，開場要抓住注意力。"},
+  {q:"良好的眼神接觸應該怎麼做？",o:["全程盯著螢幕","看著天花板","掃視全場觀眾","閉眼專心講"],a:2,e:"眼神掃視全場能和觀眾建立連結，也顯得自信。"},
+  {q:"當你發現自己講話語速太快時，應該？",o:["講更快趕快講完","在重點前後刻意停頓","越講越小聲","中途停下不講"],a:1,e:"適時停頓能放慢節奏、強調重點，也讓觀眾跟得上。"},
+  {q:"「PechaKucha」這個名字在日文中的意思是？",o:["快速","閒聊 / 你一言我一語","投影片","比賽"],a:1,e:"它是日文擬聲詞，形容閒聊時你一言我一語的聲音。"},
+];
+let quizOrder=[], quizPos=0, quizScore=0, quizAnswered=false;
+document.getElementById("startQuiz").addEventListener("click",()=>{
+  quizOrder=[...QUESTIONS.keys()].sort(()=>Math.random()-0.5);
+  quizPos=0; quizScore=0;
+  document.getElementById("quizIntro").style.display="none";
+  document.getElementById("quizResult").style.display="none";
+  document.getElementById("quizArea").style.display="block";
+  Sound.start();
+  addLog("quiz","開始闖關測驗");
+  renderQ();
+});
+function renderQ(){
+  quizAnswered=false;
+  const q=QUESTIONS[quizOrder[quizPos]];
+  document.getElementById("quizCount").textContent=(quizPos+1)+" / "+QUESTIONS.length;
+  document.getElementById("quizBar").style.width=((quizPos)/QUESTIONS.length*100)+"%";
+  document.getElementById("qText").textContent="Q"+(quizPos+1)+"　"+q.q;
+  const opts=document.getElementById("qOpts"); opts.innerHTML="";
+  q.o.forEach((txt,i)=>{
+    const b=document.createElement("button"); b.className="opt";
+    b.textContent=String.fromCharCode(65+i)+"．"+txt;
+    b.addEventListener("click",()=>chooseOpt(i,b));
+    opts.appendChild(b);
+  });
+  const ex=document.getElementById("qExplain"); ex.className="q-explain"; ex.textContent="";
+  document.getElementById("nextQ").style.display="none";
+}
+function chooseOpt(i,btn){
+  if(quizAnswered) return; quizAnswered=true;
+  const q=QUESTIONS[quizOrder[quizPos]];
+  const all=document.querySelectorAll("#qOpts .opt");
+  all.forEach(b=>b.classList.add("locked"));
+  all[q.a].classList.add("correct");
+  if(i===q.a){ quizScore++; Sound.correct(); }
+  else{ btn.classList.add("wrong"); Sound.wrong(); }
+  const ex=document.getElementById("qExplain");
+  ex.textContent=(i===q.a?"✅ 答對了！":"💡 正解："+String.fromCharCode(65+q.a))+"　"+q.e;
+  ex.classList.add("show");
+  document.getElementById("quizBar").style.width=((quizPos+1)/QUESTIONS.length*100)+"%";
+  const nb=document.getElementById("nextQ");
+  nb.textContent = quizPos<QUESTIONS.length-1 ? "下一題 →" : "看結果 🏆";
+  nb.style.display="inline-flex";
+}
+document.getElementById("nextQ").addEventListener("click",()=>{
+  Sound.click();
+  if(quizPos<QUESTIONS.length-1){ quizPos++; renderQ(); }
+  else showResult();
+});
+function showResult(){
+  document.getElementById("quizArea").style.display="none";
+  document.getElementById("quizResult").style.display="block";
+  const pct=Math.round(quizScore/QUESTIONS.length*100);
+  const ring=document.getElementById("scoreRing"); const LEN=540;
+  setTimeout(()=>ring.setAttribute("stroke-dashoffset", (LEN*(1-pct/100)).toFixed(1)),80);
+  let n=0; const anim=setInterval(()=>{ n+=Math.ceil(pct/24)||1; if(n>=pct){n=pct;clearInterval(anim);} document.getElementById("scoreNum").textContent=n; },30);
+  let msg,detail;
+  if(pct>=90){ msg="🏆 簡報高手！"; detail="你完全掌握了簡報技巧和 PechaKucha，去大展身手吧！"; }
+  else if(pct>=70){ msg="🌟 表現很棒！"; detail="基礎很紮實，複習一下答錯的地方就更完整了。"; }
+  else if(pct>=50){ msg="💪 繼續加油！"; detail="已經有概念了，建議回去「簡報技巧」再看一遍。"; }
+  else{ msg="📚 再學一次吧！"; detail="別氣餒，回到教學單元重新複習，你一定會進步！"; }
+  document.getElementById("scoreMsg").textContent=msg;
+  document.getElementById("scoreDetail").textContent=detail;
+  Sound.win(); if(pct>=70) confetti();
+  addLog("quiz","完成測驗，得分 "+pct+" 分（答對 "+quizScore+"/"+QUESTIONS.length+"）");
+}
+document.getElementById("retryQuiz").addEventListener("click",()=>{ Sound.click(); document.getElementById("startQuiz").click(); });
+
+/* ===================== 彩帶 ===================== */
+function confetti(){
+  const box=document.getElementById("confetti"); box.classList.add("show"); box.innerHTML="";
+  const colors=["#FF6B4A","#FFC93C","#16BAC5","#7C5CFC","#FF7AB6","#2EE6A8"];
+  for(let i=0;i<80;i++){
+    const p=document.createElement("i");
+    p.style.left=Math.random()*100+"%";
+    p.style.background=colors[i%colors.length];
+    p.style.animationDuration=(1.6+Math.random()*1.6)+"s";
+    p.style.animationDelay=(Math.random()*0.4)+"s";
+    box.appendChild(p);
+  }
+  setTimeout(()=>box.classList.remove("show"),3000);
+}
+
+/* ===================== 學習歷程渲染 ===================== */
+function renderLog(){
+  const log=loadLog();
+  const counts={view:0,ai:0,practice:0,quiz:0};
+  let bestScore=0;
+  log.forEach(l=>{ counts[l.type]=(counts[l.type]||0)+1;
+    if(l.type==="quiz"){ const m=l.text.match(/得分 (\d+)/); if(m) bestScore=Math.max(bestScore,+m[1]); } });
+  const stats=[
+    {big:viewedSections.size, lbl:"本次瀏覽單元"},
+    {big:counts.practice||0, lbl:"練習次數"},
+    {big:counts.quiz||0, lbl:"測驗次數"},
+    {big:bestScore+"分", lbl:"測驗最佳"},
+  ];
+  document.getElementById("statGrid").innerHTML=stats.map(s=>'<div class="stat-box"><div class="big">'+s.big+'</div><div class="lbl">'+s.lbl+'</div></div>').join("");
+  const tl=document.getElementById("timeline");
+  if(!log.length){ tl.innerHTML='<div class="empty-note">還沒有紀錄喔！開始學習後，你的足跡會出現在這裡 ✨</div>'; return; }
+  tl.className="timeline";
+  tl.innerHTML=[...log].reverse().slice(0,40).map(l=>{
+    const d=new Date(l.t);
+    const when=d.getFullYear()+"/"+(d.getMonth()+1)+"/"+d.getDate()+" "+String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0");
+    const icons={view:"📖",ai:"🤖",practice:"🏃",quiz:"📝"};
+    return '<div class="tl-item"><div class="when">'+when+'</div><div class="what">'+(icons[l.type]||"•")+" "+l.text+'</div></div>';
+  }).join("");
+}
+
+/* 下載學習紀錄 */
+function download(name, content, mime){
+  const blob=new Blob([content],{type:mime});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a"); a.href=url; a.download=name; document.body.appendChild(a); a.click();
+  setTimeout(()=>{ document.body.removeChild(a); URL.revokeObjectURL(url); },500);
+}
+document.getElementById("dlLog").addEventListener("click",()=>{
+  Sound.click();
+  const log=loadLog();
+  if(!log.length){ toast("目前還沒有學習紀錄"); return; }
+  let txt="簡報快手 · PechaKucha 學習歷程紀錄\n產生時間："+new Date().toLocaleString("zh-TW")+"\n"+"=".repeat(40)+"\n\n";
+  log.forEach(l=>{ txt+="["+new Date(l.t).toLocaleString("zh-TW")+"] "+l.text+"\n"; });
+  txt+="\n"+"=".repeat(40)+"\n共 "+log.length+" 筆紀錄。加油！";
+  download("PechaKucha學習紀錄.txt", "\ufeff"+txt, "text/plain;charset=utf-8");
+  toast("學習紀錄已下載 ⬇");
+});
+document.getElementById("clearLog").addEventListener("click",()=>{
+  if(confirm("確定要清除所有學習紀錄嗎？此動作無法復原。")){
+    Store.set(LOG_KEY,"[]"); viewedSections.clear(); renderLog(); Sound.click(); toast("紀錄已清除");
+  }
+});
+
+/* ===================== 下載整份課程為 Word ===================== */
+function buildWordHTML(){
+  const skillHTML=SKILLS.map((s,i)=>'<h3>'+(i+1)+'. '+s.title+'</h3><ul>'+s.pts.map(p=>'<li>'+p+'</li>').join('')+'</ul>').join('');
+  const factHTML=FACTS.map(f=>'<h3>'+f.h+'</h3><p>'+f.p+'</p>').join('');
+  const quizHTML=QUESTIONS.map((q,i)=>'<p><b>Q'+(i+1)+'. '+q.q+'</b><br>'+q.o.map((o,j)=>String.fromCharCode(65+j)+'. '+o).join('　')+'<br><span style="color:#0E9AA3">正解：'+String.fromCharCode(65+q.a)+'．'+q.o[q.a]+'　解說：'+q.e+'</span></p>').join('');
+  return '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="utf-8"><title>簡報快手課程</title></head>'+
+    '<body style="font-family:\'Microsoft JhengHei\',sans-serif;line-height:1.7">'+
+    '<h1 style="color:#FF6B4A">簡報快手 · PechaKucha 互動學堂</h1>'+
+    '<p style="color:#555">為高中課堂設計的簡報技巧與 PechaKucha 教學講義</p><hr>'+
+    '<h2 style="color:#7C5CFC">一、上台簡報八大技巧</h2>'+skillHTML+
+    '<h2 style="color:#16BAC5">二、認識 PechaKucha</h2>'+
+    '<p><b>核心規則：</b>20 張投影片 × 每張 20 秒 = 6 分 40 秒，投影片自動換頁。</p>'+factHTML+
+    '<h2 style="color:#E8532F">三、闖關測驗題庫（含解答）</h2>'+quizHTML+
+    '<hr><p style="color:#888;font-size:12px">簡報快手 · PechaKucha 互動學堂　｜　AI 功能由 Claude 提供</p>'+
+    '</body></html>';
+}
+function downloadWord(){
+  Sound.click();
+  download("簡報快手_PechaKucha課程講義.doc", "\ufeff"+buildWordHTML(), "application/msword");
+  addLog("view","下載整份課程 Word 講義");
+  toast("Word 講義已下載 📄");
+}
+document.getElementById("dlWord").addEventListener("click", downloadWord);
+document.getElementById("floatWord").addEventListener("click", downloadWord);
+
+/* ===================== 初始化 ===================== */
+renderLog();
+</script>
+</body>
+</html>

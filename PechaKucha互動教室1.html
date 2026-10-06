@@ -1,0 +1,508 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#6c4cff">
+  <meta name="description" content="為高中生設計的互動簡報技巧與 PechaKucha 20×20 練習課程。">
+  <title>上台發光！PechaKucha 簡報實驗室</title>
+  <style>
+    :root {
+      --ink: #25213a;
+      --muted: #625d78;
+      --paper: #fffdf8;
+      --white: #ffffff;
+      --purple: #6c4cff;
+      --purple-dark: #4b2fd4;
+      --yellow: #ffd84d;
+      --coral: #ff6b6b;
+      --cyan: #19c7c8;
+      --green: #28b879;
+      --blue: #3b82f6;
+      --pink: #ff72b6;
+      --line: #ded9f0;
+      --shadow: 0 12px 32px rgba(63, 43, 132, .13);
+      --radius: 24px;
+      --max: 1180px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 86px; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 10% 0%, rgba(255,216,77,.25), transparent 28rem),
+        radial-gradient(circle at 98% 8%, rgba(25,199,200,.18), transparent 25rem),
+        var(--paper);
+      font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+      font-size: 18px;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+    button, input, textarea, select { font: inherit; }
+    button { color: inherit; }
+    a { color: inherit; }
+    :focus-visible { outline: 4px solid rgba(25,199,200,.5); outline-offset: 3px; }
+    .skip-link { position: fixed; left: 14px; top: -80px; z-index: 200; background: var(--ink); color: white; padding: 10px 16px; border-radius: 12px; }
+    .skip-link:focus { top: 14px; }
+
+    .topbar {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(255,253,248,.92); backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(108,76,255,.12);
+    }
+    .nav { max-width: var(--max); margin: auto; padding: 10px 20px; display: flex; align-items: center; gap: 18px; min-height: 70px; }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 900; text-decoration: none; white-space: nowrap; }
+    .brand-mark { width: 42px; height: 42px; display: grid; place-items: center; border-radius: 14px; background: var(--purple); color: white; box-shadow: 4px 4px 0 var(--yellow); transform: rotate(-3deg); }
+    .brand span:last-child { letter-spacing: .02em; }
+    .nav-links { margin-left: auto; display: flex; align-items: center; gap: 5px; }
+    .nav-links a { text-decoration: none; font-weight: 800; font-size: 16px; padding: 9px 11px; border-radius: 12px; }
+    .nav-links a:hover, .nav-links a.active { background: #eeeaff; color: var(--purple-dark); }
+    .sound-btn { border: 1px solid var(--line); background: white; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; display: grid; place-items: center; }
+    .mobile-nav { display: none; }
+    .reading-progress { height: 5px; background: #eeeaff; }
+    .reading-progress > div { width: 0%; height: 100%; background: linear-gradient(90deg,var(--purple),var(--pink),var(--yellow)); transition: width .15s; }
+
+    main { overflow: clip; }
+    .hero { position: relative; max-width: var(--max); min-height: 680px; margin: auto; padding: 76px 22px 64px; display: grid; grid-template-columns: 1.08fr .92fr; align-items: center; gap: 55px; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 900; letter-spacing: .12em; text-transform: uppercase; color: var(--purple-dark); background: #eeeaff; border-radius: 999px; padding: 7px 13px; }
+    .hero h1 { margin: 20px 0 18px; font-size: clamp(44px,7vw,82px); line-height: 1.06; letter-spacing: -.045em; }
+    .hero h1 .highlight { position: relative; display: inline-block; color: var(--purple); z-index: 0; }
+    .hero h1 .highlight::after { content:""; position:absolute; height:18px; background:var(--yellow); left:-3%; right:-3%; bottom:4px; z-index:-1; border-radius:40% 20%; transform:rotate(-1.5deg); }
+    .lead { font-size: clamp(20px,2vw,24px); max-width: 720px; color: var(--muted); margin: 0 0 28px; }
+    .cta-row { display: flex; flex-wrap: wrap; gap: 13px; align-items: center; }
+    .btn { border: 0; border-radius: 15px; padding: 13px 20px; min-height: 52px; display: inline-flex; align-items: center; justify-content: center; gap: 9px; font-weight: 900; text-decoration: none; cursor: pointer; transition: transform .18s, box-shadow .18s, background .18s; }
+    .btn:hover { transform: translateY(-2px); }
+    .btn-primary { color: white; background: var(--purple); box-shadow: 0 7px 0 var(--purple-dark); }
+    .btn-primary:active { transform: translateY(5px); box-shadow: 0 2px 0 var(--purple-dark); }
+    .btn-secondary { background: white; border: 2px solid var(--line); box-shadow: 0 5px 0 #ded9f0; }
+    .btn-small { padding: 9px 14px; min-height: 44px; font-size: 16px; }
+    .hero-mini { margin-top: 28px; display: flex; gap: 24px; flex-wrap: wrap; }
+    .hero-mini strong { display:block; font-size: 25px; line-height:1.1; color:var(--purple-dark); }
+    .hero-mini span { color:var(--muted); font-size:15px; }
+    .hero-art { position: relative; min-height: 480px; display: grid; place-items: center; }
+    .stage-card { width: min(440px,90vw); aspect-ratio: 4/4.25; border-radius: 36px; background: linear-gradient(155deg,#7659ff,#5536e6); box-shadow: 18px 18px 0 var(--yellow), var(--shadow); position:relative; overflow:hidden; transform:rotate(2deg); }
+    .stage-card::before { content:""; position:absolute; width:260px; height:260px; border-radius:50%; background:#8cf0e8; top:-110px; right:-80px; }
+    .stage-card::after { content:""; position:absolute; height:18%; left:0; right:0; bottom:0; background:#332477; clip-path:polygon(0 45%,14% 5%,28% 42%,42% 1%,55% 48%,72% 4%,87% 45%,100% 8%,100% 100%,0 100%); }
+    .screen { position:absolute; left:11%; right:11%; top:10%; height:50%; background:#fffdf8; border:10px solid #2d2750; border-radius:18px; display:grid; place-items:center; overflow:hidden; }
+    .screen-slide { text-align:center; transform:rotate(-2deg); }
+    .screen-slide b { display:block; color:var(--purple); font-size:44px; line-height:1; }
+    .screen-slide small { font-weight:900; color:var(--muted); }
+    .speaker { position:absolute; left:37%; bottom:13%; width:26%; height:31%; z-index:2; }
+    .speaker-head { width:64px; height:64px; border-radius:50%; background:#ffd1aa; border:7px solid #30284c; margin:auto; position:relative; }
+    .speaker-head::before { content:""; position:absolute; width:54px; height:24px; left:-2px; top:-6px; background:#30284c; border-radius:50% 50% 30% 20%; }
+    .speaker-body { height:110px; border-radius:48px 48px 10px 10px; background:var(--coral); border:7px solid #30284c; margin-top:-1px; }
+    .speaker-arm { position:absolute; width:63px; height:18px; background:#ffd1aa; border:6px solid #30284c; border-radius:20px; right:-46px; top:90px; transform:rotate(-28deg); transform-origin:left; }
+    .mic { position:absolute; right:-48px; top:61px; font-size:36px; transform:rotate(-16deg); }
+    .float-tag { position:absolute; z-index:3; background:white; border:3px solid var(--ink); box-shadow:5px 5px 0 var(--ink); border-radius:15px; padding:10px 14px; font-weight:900; animation:float 3s ease-in-out infinite; }
+    .tag-a { top:3%; left:-5%; transform:rotate(-7deg); }
+    .tag-b { right:-8%; bottom:15%; transform:rotate(7deg); animation-delay:-1.4s; }
+    .spark { position:absolute; font-size:35px; animation:pulse 1.8s infinite; }
+    .spark.a { top:15%; right:-2%; } .spark.b { bottom:6%; left:5%; animation-delay:-.9s; }
+    @keyframes float { 0%,100%{translate:0 0} 50%{translate:0 -10px} }
+    @keyframes pulse { 0%,100%{transform:scale(1) rotate(0)} 50%{transform:scale(1.25) rotate(15deg)} }
+
+    .section { padding: 88px 22px; }
+    .section-inner { max-width: var(--max); margin: auto; }
+    .section-soft { background: #f2efff; }
+    .section-dark { color:white; background:#28203f; }
+    .section-cyan { background:#dff9f6; }
+    .section-head { display:grid; grid-template-columns:1fr auto; gap:24px; align-items:end; margin-bottom:34px; }
+    .section-kicker { font-weight:900; letter-spacing:.1em; color:var(--purple); font-size:15px; margin:0 0 5px; }
+    .section-dark .section-kicker { color:var(--yellow); }
+    h2 { margin:0; font-size:clamp(34px,5vw,57px); line-height:1.15; letter-spacing:-.03em; }
+    .section-head p { margin:0; max-width:470px; color:var(--muted); }
+    .section-dark .section-head p { color:#d7d0ed; }
+
+    .route-map { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
+    .route-card { background:white; border:2px solid var(--line); border-radius:22px; padding:22px; position:relative; min-height:200px; box-shadow:0 7px 0 rgba(108,76,255,.12); }
+    .route-num { width:42px; height:42px; display:grid; place-items:center; border-radius:50%; background:var(--purple); color:white; font-weight:900; }
+    .route-card:nth-child(2) .route-num{background:var(--coral)}
+    .route-card:nth-child(3) .route-num{background:var(--cyan);color:var(--ink)}
+    .route-card:nth-child(4) .route-num{background:var(--green)}
+    .route-card h3 { margin:16px 0 6px; font-size:23px; }
+    .route-card p { margin:0; color:var(--muted); font-size:16px; }
+
+    .tips-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
+    .tip-card { text-align:left; border:2px solid transparent; padding:0; border-radius:24px; background:white; cursor:pointer; min-height:286px; overflow:hidden; box-shadow:var(--shadow); transition:.2s; }
+    .tip-card:hover { transform:translateY(-4px) rotate(-.3deg); }
+    .tip-card.done { border-color:var(--green); }
+    .tip-top { height:108px; display:flex; align-items:center; justify-content:space-between; padding:20px 23px; background:#ffe7b0; }
+    .tip-card:nth-child(2) .tip-top{background:#ffd9e9}.tip-card:nth-child(3) .tip-top{background:#d9f8f4}.tip-card:nth-child(4) .tip-top{background:#e3dcff}.tip-card:nth-child(5) .tip-top{background:#dcedff}.tip-card:nth-child(6) .tip-top{background:#e5f8cf}
+    .tip-icon { font-size:47px; line-height:1; filter:drop-shadow(3px 3px 0 rgba(37,33,58,.14)); }
+    .tip-check { width:33px; height:33px; border-radius:50%; border:2px solid rgba(37,33,58,.25); display:grid; place-items:center; font-weight:900; background:white; }
+    .tip-card.done .tip-check { color:white; background:var(--green); border-color:var(--green); }
+    .tip-body { padding:20px 23px 23px; }
+    .tip-body h3 { margin:0 0 7px; font-size:23px; }
+    .tip-body p { margin:0; color:var(--muted); font-size:16px; }
+    .tip-more { display:grid; grid-template-rows:0fr; transition:grid-template-rows .3s; }
+    .tip-card[aria-expanded="true"] .tip-more { grid-template-rows:1fr; }
+    .tip-more > div { overflow:hidden; }
+    .tip-more ul { margin:13px 0 0; padding-left:22px; font-size:16px; color:var(--ink); }
+
+    .formula { margin-top:24px; background:var(--ink); color:white; border-radius:24px; padding:25px; display:grid; grid-template-columns:auto 1fr; gap:20px; align-items:center; }
+    .formula-label { color:var(--yellow); font-size:29px; font-weight:900; }
+    .formula-steps { display:flex; align-items:center; justify-content:space-around; gap:12px; text-align:center; }
+    .formula-step b { display:block; font-size:22px; }
+    .formula-step span { color:#d8d4e5; font-size:15px; }
+    .arrow { color:var(--yellow); font-size:28px; }
+
+    .pk-intro { display:grid; grid-template-columns:.9fr 1.1fr; gap:36px; align-items:center; }
+    .pk-number { width:min(420px,100%); aspect-ratio:1; border-radius:50%; margin:auto; display:grid; place-items:center; text-align:center; background:var(--yellow); box-shadow:20px 15px 0 var(--coral); border:8px solid var(--ink); position:relative; }
+    .pk-number strong { display:block; font-size:clamp(55px,10vw,100px); line-height:.9; }
+    .pk-number span { font-weight:900; font-size:20px; }
+    .pk-number::after { content:"自動換頁"; position:absolute; bottom:5%; right:-4%; background:white; padding:8px 13px; border:3px solid var(--ink); border-radius:12px; transform:rotate(-5deg); font-weight:900; }
+    .pk-copy h3 { font-size:31px; margin:0 0 12px; }
+    .pk-copy p { color:var(--muted); }
+    .pk-rules { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:22px; }
+    .pk-rule { border-radius:18px; padding:17px; background:white; border:2px solid var(--line); }
+    .pk-rule b { display:block; font-size:18px; }
+    .pk-rule span { color:var(--muted); font-size:15px; }
+    .timeline20 { margin-top:36px; display:grid; grid-template-columns:repeat(20,1fr); gap:4px; }
+    .timeline20 span { height:44px; border-radius:8px; background:#dcd5ff; display:grid; place-items:center; font-weight:900; font-size:12px; }
+    .timeline20 span:nth-child(-n+4){background:#ffd84d}.timeline20 span:nth-child(n+5):nth-child(-n+16){background:#9be8e2}.timeline20 span:nth-child(n+17){background:#ff9cbd}
+    .timeline-labels { display:grid; grid-template-columns:4fr 12fr 4fr; gap:8px; font-size:15px; font-weight:900; text-align:center; margin-top:8px; }
+
+    .practice-layout { display:grid; grid-template-columns:360px 1fr; gap:22px; align-items:start; }
+    .control-panel { background:#372d52; border:1px solid #554a70; border-radius:24px; padding:22px; position:sticky; top:95px; }
+    .control-panel label { display:block; font-size:15px; color:#d7d0ed; font-weight:800; margin:0 0 7px; }
+    select, textarea, input[type="text"] { width:100%; border:2px solid #ded9f0; background:white; color:var(--ink); border-radius:13px; padding:11px 13px; }
+    .control-group { margin-bottom:18px; }
+    .mode-tabs { display:grid; grid-template-columns:repeat(3,1fr); gap:7px; }
+    .mode-btn { border:1px solid #6d6288; color:white; background:#44385e; border-radius:11px; min-height:46px; cursor:pointer; font-weight:900; font-size:15px; }
+    .mode-btn.active { background:var(--yellow); color:var(--ink); border-color:var(--yellow); }
+    .control-actions { display:grid; grid-template-columns:1fr 1fr; gap:9px; }
+    .control-actions .btn:first-child { grid-column:1/-1; }
+    .key-hint { color:#aaa2c0; font-size:14px; margin:14px 0 0; text-align:center; }
+    .practice-stage { min-width:0; }
+    .slide-window { border:4px solid #514668; background:white; color:var(--ink); min-height:450px; border-radius:28px; position:relative; overflow:hidden; display:grid; grid-template-rows:auto 1fr auto; }
+    .slide-bar { padding:14px 18px; display:flex; align-items:center; gap:10px; border-bottom:2px solid #eeeaf8; }
+    .slide-dot { width:12px;height:12px;border-radius:50%;background:var(--coral)} .slide-dot:nth-child(2){background:var(--yellow)} .slide-dot:nth-child(3){background:var(--green)}
+    .slide-index { margin-left:auto; font-weight:900; color:var(--purple); }
+    .slide-content { position:relative; padding:45px clamp(24px,6vw,70px); display:grid; align-content:center; background:linear-gradient(145deg,#fffdf8,#f2efff); }
+    .slide-content::after { content:""; position:absolute; width:180px;height:180px;border-radius:50%;background:rgba(255,216,77,.34);right:-50px;bottom:-75px; }
+    .slide-emoji { font-size:54px; margin-bottom:8px; }
+    .slide-content h3 { margin:0 0 8px; font-size:clamp(29px,5vw,52px); line-height:1.15; max-width:720px; }
+    .slide-content p { margin:0; color:var(--muted); font-size:19px; max-width:700px; }
+    .slide-footer { padding:14px 18px; display:flex; gap:13px; align-items:center; background:white; }
+    .timer-ring { width:66px;height:66px;border-radius:50%;display:grid;place-items:center;flex:0 0 auto;background:conic-gradient(var(--yellow) var(--timer,100%),#4a405e 0);position:relative; }
+    .timer-ring::before { content:""; position:absolute; inset:6px; background:#28203f; border-radius:50%; }
+    .timer-number { position:relative; color:white; font-weight:900; font-size:24px; font-variant-numeric:tabular-nums; }
+    .timer-copy { color:var(--muted); font-size:15px; }
+    .timer-copy strong { display:block; color:var(--ink); font-size:17px; }
+    .pulse-live { display:none; width:9px;height:9px;border-radius:50%;background:var(--coral); animation:blink 1s infinite; }
+    .running .pulse-live { display:inline-block; }
+    @keyframes blink { 50%{opacity:.25} }
+    .notes { margin-top:13px; background:#372d52; border-radius:18px; padding:15px; }
+    .notes label { display:block;color:#d7d0ed;font-size:15px;font-weight:800;margin-bottom:7px; }
+    .notes textarea { min-height:105px; resize:vertical; }
+
+    .micro-practice { margin-top:25px; display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+    .mini-lab { background:#372d52; border:1px solid #554a70; border-radius:20px; padding:22px; }
+    .mini-lab h3 { margin:0 0 6px; font-size:22px; }
+    .mini-lab p { color:#c8c1dc; margin:0 0 14px; font-size:16px; }
+    .prompt-box { min-height:83px; background:#fff; color:var(--ink); border-radius:14px; padding:14px; display:flex; align-items:center; font-weight:800; }
+    .breath-wrap { display:flex; align-items:center; gap:15px; }
+    .breath-orb { width:83px;height:83px;border-radius:50%;background:var(--cyan);display:grid;place-items:center;color:var(--ink);font-weight:900;transition:transform 4s ease-in-out;flex:0 0 auto; }
+    .breath-orb.inhale { transform:scale(1.42); }
+
+    .quiz-wrap { display:grid; grid-template-columns:1fr 280px; gap:25px; align-items:start; }
+    .question-card { background:white; border:2px solid var(--line); border-radius:22px; padding:24px; margin-bottom:15px; box-shadow:0 5px 0 rgba(108,76,255,.1); }
+    .q-label { display:flex;align-items:center;gap:10px;font-weight:900;font-size:20px;margin-bottom:13px; }
+    .q-num { width:34px;height:34px;display:grid;place-items:center;border-radius:10px;background:var(--purple);color:white;font-size:16px;flex:0 0 auto; }
+    .options { display:grid; gap:9px; }
+    .option { border:2px solid #e4e0ef; background:#fff; border-radius:14px; padding:12px 14px; display:flex; gap:11px; align-items:flex-start; cursor:pointer; text-align:left; width:100%; }
+    .option:hover { border-color:#a99af6; background:#faf9ff; }
+    .option.selected { border-color:var(--purple); background:#eeeaff; }
+    .option.correct { border-color:var(--green); background:#e5f8ef; }
+    .option.wrong { border-color:var(--coral); background:#ffeded; }
+    .option-letter { width:29px;height:29px;display:grid;place-items:center;border-radius:50%;background:#eeeaf5;font-weight:900;flex:0 0 auto; }
+    .explain { margin-top:12px; padding:12px 14px; border-radius:12px; background:#f5f2ff; display:none; font-size:16px; }
+    .question-card.reviewed .explain { display:block; }
+    .quiz-side { position:sticky;top:95px;background:var(--purple);color:white;border-radius:23px;padding:22px;box-shadow:8px 8px 0 var(--yellow); }
+    .score-orb { width:120px;height:120px;border-radius:50%;display:grid;place-items:center;margin:4px auto 14px;background:white;color:var(--purple);font-weight:900;font-size:36px; }
+    .quiz-side h3 { text-align:center;margin:0 0 6px; }
+    .quiz-side p { color:#e7e2ff;font-size:15px;text-align:center; }
+
+    .history-grid { display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:25px; }
+    .stat { background:white;border:2px solid #c8ebe8;border-radius:20px;padding:20px; }
+    .stat span { color:var(--muted);font-size:15px;font-weight:800; }
+    .stat strong { display:block;font-size:36px;line-height:1.2;color:var(--purple); }
+    .history-panel { display:grid;grid-template-columns:1fr 310px;gap:22px; }
+    .log-list { background:white;border-radius:23px;padding:20px;border:2px solid #c8ebe8;min-height:250px; }
+    .log-item { display:grid;grid-template-columns:44px 1fr auto;gap:12px;align-items:center;padding:13px 5px;border-bottom:1px solid #e4efee; }
+    .log-item:last-child{border-bottom:0}.log-icon{width:40px;height:40px;display:grid;place-items:center;border-radius:12px;background:#eeeaff}.log-text b{display:block}.log-text span,.log-time{font-size:14px;color:var(--muted)}
+    .history-actions { background:#fff;border-radius:23px;padding:22px;border:2px solid #c8ebe8; }
+    .history-actions h3{margin-top:0}.history-actions .btn{width:100%;margin-bottom:10px}.privacy-note{font-size:14px;color:var(--muted);margin:10px 0 0;}
+
+    .teacher-box { margin-top:30px;background:var(--yellow);border:4px solid var(--ink);border-radius:24px;padding:25px;display:grid;grid-template-columns:auto 1fr auto;gap:18px;align-items:center;box-shadow:8px 8px 0 var(--ink); }
+    .teacher-icon{font-size:50px}.teacher-box h3{margin:0}.teacher-box p{margin:3px 0 0;}.teacher-box .btn{background:white;border:2px solid var(--ink);}
+    footer { background:#181426;color:#ddd7ed;padding:45px 22px; }
+    .footer-inner { max-width:var(--max);margin:auto;display:flex;gap:30px;justify-content:space-between;align-items:center; }
+    .footer-inner strong{color:white;font-size:21px}.footer-inner p{margin:4px 0 0;font-size:15px}.footer-badge{background:#30284c;border-radius:999px;padding:9px 15px;font-size:15px;}
+
+    .toast { position:fixed;z-index:300;left:50%;bottom:25px;transform:translate(-50%,120px);opacity:0;background:var(--ink);color:white;border-radius:14px;padding:12px 18px;box-shadow:var(--shadow);transition:.3s;pointer-events:none;font-weight:800;text-align:center; }
+    .toast.show { transform:translate(-50%,0);opacity:1; }
+    .confetti { position:fixed;pointer-events:none;z-index:400;width:10px;height:16px;top:-20px;animation:fall 1.8s linear forwards; }
+    @keyframes fall { to{transform:translate(var(--drift),105vh) rotate(720deg);opacity:.8} }
+    .modal { position:fixed;inset:0;z-index:250;background:rgba(24,20,38,.72);display:none;align-items:center;justify-content:center;padding:20px; }
+    .modal.open { display:flex; }
+    .modal-card { width:min(620px,100%);max-height:90vh;overflow:auto;background:white;border-radius:28px;padding:28px;box-shadow:var(--shadow); }
+    .modal-card h3{font-size:30px;margin:0 0 10px}.modal-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
+    .name-row{display:grid;grid-template-columns:1fr auto;gap:9px;margin-top:14px}
+    .sr-only { position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0; }
+
+    @media (max-width: 960px) {
+      .hero{grid-template-columns:1fr;min-height:auto;padding-top:55px}.hero-copy{text-align:center}.lead{margin-left:auto;margin-right:auto}.cta-row,.hero-mini{justify-content:center}.hero-art{min-height:450px}
+      .nav-links{display:none}.mobile-nav{display:block;margin-left:auto}.route-map{grid-template-columns:1fr 1fr}.tips-grid{grid-template-columns:1fr 1fr}.pk-intro{grid-template-columns:1fr}.practice-layout{grid-template-columns:1fr}.control-panel{position:static}.quiz-wrap{grid-template-columns:1fr}.quiz-side{position:static;order:-1;display:grid;grid-template-columns:auto 1fr;align-items:center}.score-orb{margin:0 18px 0 0}.quiz-side h3,.quiz-side p{text-align:left}.history-panel{grid-template-columns:1fr}.history-grid{grid-template-columns:1fr 1fr}.teacher-box{grid-template-columns:auto 1fr}.teacher-box .btn{grid-column:1/-1}.section-head{grid-template-columns:1fr}.section-head p{max-width:700px}.formula{grid-template-columns:1fr}.timeline20{grid-template-columns:repeat(10,1fr)}.timeline-labels{display:none}
+    }
+    @media (max-width: 620px) {
+      body{font-size:17px}.nav{padding:9px 14px}.brand span:last-child{display:none}.hero{padding-left:17px;padding-right:17px;gap:30px}.hero h1{font-size:45px}.hero-art{min-height:360px}.stage-card{width:305px}.speaker-head{width:49px;height:49px}.speaker-head::before{width:40px}.speaker-body{height:83px}.speaker-arm{top:70px}.float-tag{font-size:14px}.tag-a{left:0}.tag-b{right:0}.section{padding:65px 17px}.route-map,.tips-grid,.micro-practice{grid-template-columns:1fr}.formula-steps{display:grid;grid-template-columns:1fr}.arrow{transform:rotate(90deg)}.pk-rules{grid-template-columns:1fr}.pk-number{width:270px}.timeline20{grid-template-columns:repeat(5,1fr)}.slide-window{min-height:420px}.slide-content{padding:35px 23px}.slide-footer{align-items:flex-start}.history-grid{grid-template-columns:1fr 1fr}.stat{padding:15px}.stat strong{font-size:30px}.log-item{grid-template-columns:40px 1fr}.log-time{grid-column:2}.teacher-box{grid-template-columns:1fr;text-align:center}.teacher-box .btn{grid-column:auto}.footer-inner{display:block;text-align:center}.footer-badge{display:inline-block;margin-top:15px}.name-row{grid-template-columns:1fr}.quiz-side{display:block}.score-orb{margin:0 auto 12px}.quiz-side h3,.quiz-side p{text-align:center}.cta-row .btn{width:100%}
+    }
+    @media (prefers-reduced-motion: reduce) { html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important} }
+    @media print { .topbar,.cta-row,.practice-layout,.micro-practice,.quiz-side,.history-actions,.teacher-box,.toast,.modal{display:none!important}.section{padding:28px 0}.hero{display:block;min-height:0;padding:30px 0}.hero-art{display:none}.tips-grid{grid-template-columns:1fr 1fr}.tip-more{grid-template-rows:1fr}.section-dark{background:white;color:var(--ink)}body{font-size:12pt}.section-head p,.section-dark .section-head p{color:var(--muted)} }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要內容</a>
+  <header class="topbar">
+    <nav class="nav" aria-label="主要選單">
+      <a class="brand" href="#home"><span class="brand-mark" aria-hidden="true">🎤</span><span>上台發光實驗室</span></a>
+      <div class="nav-links">
+        <a href="#skills">簡報技巧</a><a href="#pechakucha">20×20</a><a href="#practice">演練</a><a href="#quiz">測驗</a><a href="#history">學習歷程</a>
+      </div>
+      <select class="mobile-nav" aria-label="前往單元" id="mobileNav">
+        <option value="#home">首頁</option><option value="#skills">簡報技巧</option><option value="#pechakucha">20×20</option><option value="#practice">演練</option><option value="#quiz">測驗</option><option value="#history">學習歷程</option>
+      </select>
+      <button class="sound-btn" id="soundToggle" aria-pressed="true" aria-label="關閉音效" title="音效開關">🔊</button>
+    </nav>
+    <div class="reading-progress" aria-hidden="true"><div id="readingProgress"></div></div>
+  </header>
+
+  <main id="main">
+    <section class="hero" id="home">
+      <div class="hero-copy">
+        <div class="eyebrow">⚡ 高中生互動簡報課</div>
+        <h1>把每一次上台，<br>變成你的<span class="highlight">發光時刻</span></h1>
+        <p class="lead">學會抓住注意力、清楚說故事，並用 PechaKucha「20 張投影片 × 每張 20 秒」練出俐落節奏。</p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="#skills" data-sound>開始闖關 <span aria-hidden="true">→</span></a>
+          <button class="btn btn-secondary" id="downloadWordTop" data-sound>📄 下載完整 Word 講義</button>
+        </div>
+        <div class="hero-mini" aria-label="課程特色">
+          <div><strong>6 招</strong><span>實用上台技巧</span></div>
+          <div><strong>20×20</strong><span>節奏演練模式</span></div>
+          <div><strong>8 題</strong><span>理解力測驗</span></div>
+        </div>
+      </div>
+      <div class="hero-art" aria-label="學生在舞台上進行簡報的插畫">
+        <div class="stage-card">
+          <div class="screen"><div class="screen-slide"><b>20 × 20</b><small>讓故事更有節奏</small></div></div>
+          <div class="speaker"><div class="speaker-head"></div><div class="speaker-body"></div><div class="speaker-arm"></div><div class="mic">🎤</div></div>
+        </div>
+        <div class="float-tag tag-a">👀 抓住目光</div><div class="float-tag tag-b">💡 說出重點</div><div class="spark a">✨</div><div class="spark b">⚡</div>
+      </div>
+    </section>
+
+    <section class="section section-soft" aria-labelledby="route-title">
+      <div class="section-inner">
+        <div class="section-head"><div><p class="section-kicker">LEARNING ROUTE</p><h2 id="route-title">今天的學習路線</h2></div><p>教師可依序帶領全班；自學者也能從任一單元開始。完成的活動會自動記進這台裝置。</p></div>
+        <div class="route-map">
+          <article class="route-card"><div class="route-num">1</div><h3>理解好簡報</h3><p>從內容、畫面到台風，掌握六個可立即運用的技巧。</p></article>
+          <article class="route-card"><div class="route-num">2</div><h3>認識 20×20</h3><p>理解 PechaKucha 的規則、節奏與故事結構。</p></article>
+          <article class="route-card"><div class="route-num">3</div><h3>反覆演練</h3><p>從 3 張暖身、5 張衝刺到完整 20 張自由練習。</p></article>
+          <article class="route-card"><div class="route-num">4</div><h3>檢核與反思</h3><p>完成測驗，匯出學習歷程，留下下一次進步線索。</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="skills" aria-labelledby="skills-title">
+      <div class="section-inner">
+        <div class="section-head"><div><p class="section-kicker">LEVEL 01 · PRESENTATION SKILLS</p><h2 id="skills-title">上台不慌，先練這 6 招</h2></div><p>點開每張卡片看行動提示；看完就按「完成」，累積你的學習進度。</p></div>
+        <div class="tips-grid" id="tipsGrid">
+          <button class="tip-card" data-tip="hook" aria-expanded="false"><span class="tip-top"><span class="tip-icon">🪝</span><span class="tip-check">✓</span></span><span class="tip-body"><span class="sr-only">技巧一：</span><h3>開場先下鉤子</h3><p>前 20 秒別急著自我介紹，用問題、驚人數字或小故事喚醒觀眾。</p><span class="tip-more"><span><ul><li>「你有沒有想過……？」</li><li>先說衝突，再揭曉主題。</li><li>承諾觀眾將帶走什麼。</li></ul></span></span></span></button>
+          <button class="tip-card" data-tip="message" aria-expanded="false"><span class="tip-top"><span class="tip-icon">🎯</span><span class="tip-check">✓</span></span><span class="tip-body"><h3>一頁只講一件事</h3><p>把每張投影片當成一句話；刪掉無法支持這句話的內容。</p><span class="tip-more"><span><ul><li>標題直接寫結論。</li><li>關鍵字控制在 3–7 個。</li><li>細節由你說，不全塞上畫面。</li></ul></span></span></span></button>
+          <button class="tip-card" data-tip="visual" aria-expanded="false"><span class="tip-top"><span class="tip-icon">🖼️</span><span class="tip-check">✓</span></span><span class="tip-body"><h3>用畫面，不用字牆</h3><p>選一張有意義的大圖，再用高對比、夠大的字補上重點。</p><span class="tip-more"><span><ul><li>標題建議至少 32 pt。</li><li>遠看三秒仍能讀懂。</li><li>圖片要有目的，不只是裝飾。</li></ul></span></span></span></button>
+          <button class="tip-card" data-tip="story" aria-expanded="false"><span class="tip-top"><span class="tip-icon">🧭</span><span class="tip-check">✓</span></span><span class="tip-body"><h3>故事要有方向</h3><p>用「發生什麼 → 為什麼重要 → 我們可以怎麼做」帶觀眾前進。</p><span class="tip-more"><span><ul><li>開頭提出問題或目標。</li><li>中段提供證據與轉折。</li><li>結尾回扣開場並行動。</li></ul></span></span></span></button>
+          <button class="tip-card" data-tip="voice" aria-expanded="false"><span class="tip-top"><span class="tip-icon">🔊</span><span class="tip-check">✓</span></span><span class="tip-body"><h3>聲音要有紅綠燈</h3><p>重要處放慢、停頓；轉場加速。用音量與語氣標出重點。</p><span class="tip-more"><span><ul><li>一句一口氣，不搶拍。</li><li>關鍵字前停半秒。</li><li>句尾說完整，不要越來越小聲。</li></ul></span></span></span></button>
+          <button class="tip-card" data-tip="presence" aria-expanded="false"><span class="tip-top"><span class="tip-icon">🌟</span><span class="tip-check">✓</span></span><span class="tip-body"><h3>讓身體幫你說話</h3><p>站穩、看人、手勢有意義。緊張時，把注意力放回想傳達的訊息。</p><span class="tip-more"><span><ul><li>雙腳與肩同寬，肩膀放鬆。</li><li>視線輪流照顧三個區域。</li><li>不要背對觀眾讀投影片。</li></ul></span></span></span></button>
+        </div>
+        <div class="formula"><div class="formula-label">故事公式</div><div class="formula-steps"><div class="formula-step"><b>① 鉤子</b><span>為什麼要聽？</span></div><div class="arrow">→</div><div class="formula-step"><b>② 發現</b><span>證據與轉折</span></div><div class="arrow">→</div><div class="formula-step"><b>③ 行動</b><span>接下來怎麼做？</span></div></div></div>
+      </div>
+    </section>
+
+    <section class="section section-cyan" id="pechakucha" aria-labelledby="pk-title">
+      <div class="section-inner">
+        <div class="section-head"><div><p class="section-kicker">LEVEL 02 · PECHAKUCHA</p><h2 id="pk-title">PechaKucha：讓節奏替你說故事</h2></div><p>PechaKucha 常用的 20×20 格式：20 張投影片，每張自動播放 20 秒，總長 6 分 40 秒。</p></div>
+        <div class="pk-intro">
+          <div class="pk-number"><div><strong>20 × 20</strong><span>20 張 × 每張 20 秒<br>= 6 分 40 秒</span></div></div>
+          <div class="pk-copy"><h3>限制不是綁手綁腳，而是幫你剪掉廢話。</h3><p>自動換頁迫使你提前排好故事節奏。你不需要在 20 秒內念完文字，而是讓每張圖片成為一個提示，帶觀眾走到下一步。</p><div class="pk-rules"><div class="pk-rule"><b>🖼️ 圖像優先</b><span>每頁一個視覺焦點</span></div><div class="pk-rule"><b>⏱️ 自動換頁</b><span>不等待、不回頭</span></div><div class="pk-rule"><b>🧩 串成故事</b><span>前後頁彼此接棒</span></div></div></div>
+        </div>
+        <div class="timeline20" aria-label="20 張投影片的建議故事結構">
+          <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span><span>13</span><span>14</span><span>15</span><span>16</span><span>17</span><span>18</span><span>19</span><span>20</span>
+        </div>
+        <div class="timeline-labels"><span>開場：勾起好奇</span><span>發展：例子、證據、轉折</span><span>結尾：回扣與行動</span></div>
+      </div>
+    </section>
+
+    <section class="section section-dark" id="practice" aria-labelledby="practice-title">
+      <div class="section-inner">
+        <div class="section-head"><div><p class="section-kicker">LEVEL 03 · PRACTICE STUDIO</p><h2 id="practice-title">20 秒節奏演練室</h2></div><p>選題目和長度，按下開始就會自動換頁。先把故事說順，再追求完美。</p></div>
+        <div class="practice-layout">
+          <aside class="control-panel" aria-label="演練設定">
+            <div class="control-group"><label for="topicSelect">練習主題</label><select id="topicSelect"><option value="school">我想改變的校園小事</option><option value="future">十年後的我</option><option value="recommend">一件值得推薦的事物</option><option value="custom">自訂自由題</option></select></div>
+            <div class="control-group"><label>演練長度</label><div class="mode-tabs" role="group" aria-label="選擇投影片張數"><button class="mode-btn active" data-slides="3">暖身 3</button><button class="mode-btn" data-slides="5">衝刺 5</button><button class="mode-btn" data-slides="20">完整 20</button></div></div>
+            <div class="control-actions"><button class="btn btn-primary" id="startPractice">▶ 開始演練</button><button class="btn btn-secondary btn-small" id="prevSlide">← 上一張</button><button class="btn btn-secondary btn-small" id="nextSlide">下一張 →</button><button class="btn btn-secondary btn-small" id="pausePractice">⏸ 暫停</button><button class="btn btn-secondary btn-small" id="resetPractice">↺ 重設</button></div>
+            <p class="key-hint">鍵盤：空白鍵開始／暫停，← → 換頁</p>
+          </aside>
+          <div class="practice-stage" id="practiceStage">
+            <div class="slide-window">
+              <div class="slide-bar"><span class="slide-dot"></span><span class="slide-dot"></span><span class="slide-dot"></span><span class="slide-index" id="slideIndex">投影片 1 / 3</span></div>
+              <div class="slide-content"><div class="slide-emoji" id="slideEmoji">🏫</div><h3 id="slideTitle">先讓大家看見問題</h3><p id="slidePrompt">用一個真實瞬間開場：校園裡，哪個小地方讓你覺得「可以更好」？</p></div>
+              <div class="slide-footer"><div class="timer-ring" id="timerRing" style="--timer:100%"><span class="timer-number" id="timerNumber">20</span></div><div class="timer-copy"><strong><span class="pulse-live"></span> <span id="timerStatus">準備好就按開始</span></strong>每張 20 秒，到 3 秒時會有提示音</div></div>
+            </div>
+            <div class="notes"><label for="practiceNotes">我的演練筆記（自動儲存）</label><textarea id="practiceNotes" placeholder="記下卡住的地方、想調整的句子，或下一次的目標……"></textarea></div>
+          </div>
+        </div>
+        <div class="micro-practice">
+          <article class="mini-lab"><h3>🎲 開場鉤子快抽</h3><p>按一下抽題，立刻用 20 秒說出一個吸引人的開場。</p><div class="prompt-box" id="hookPrompt">如果全世界明天都不能使用手機，你的第一天會怎麼過？</div><button class="btn btn-secondary btn-small" id="newHook" style="margin-top:12px">換一題</button></article>
+          <article class="mini-lab"><h3>🫁 4–4 穩定呼吸</h3><p>上台前吸氣 4 秒、吐氣 4 秒，跟著圓球做兩輪。</p><div class="breath-wrap"><div class="breath-orb" id="breathOrb">準備</div><button class="btn btn-secondary btn-small" id="startBreath">開始呼吸</button></div></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-soft" id="quiz" aria-labelledby="quiz-title">
+      <div class="section-inner">
+        <div class="section-head"><div><p class="section-kicker">LEVEL 04 · KNOWLEDGE CHECK</p><h2 id="quiz-title">理解力測驗</h2></div><p>共 8 題，每題選一個答案。送出後可立即看解析並重做。</p></div>
+        <div class="quiz-wrap">
+          <div id="questions"></div>
+          <aside class="quiz-side"><div class="score-orb" id="scoreOrb">—</div><div><h3 id="scoreTitle">等你挑戰</h3><p id="scoreCopy">完成 8 題後送出答案，看看你是否掌握舞台與 PechaKucha 的關鍵。</p><button class="btn btn-secondary" id="submitQuiz" style="width:100%">送出答案</button><button class="btn btn-secondary btn-small" id="retryQuiz" style="width:100%;margin-top:10px;display:none">重新挑戰</button></div></aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-cyan" id="history" aria-labelledby="history-title">
+      <div class="section-inner">
+        <div class="section-head"><div><p class="section-kicker">MY LEARNING PORTFOLIO</p><h2 id="history-title">我的學習歷程</h2></div><p>進度只儲存在你目前使用的瀏覽器，下載後就能交作業或留存反思。</p></div>
+        <div class="history-grid"><div class="stat"><span>已讀技巧</span><strong id="statTips">0 / 6</strong></div><div class="stat"><span>完成演練</span><strong id="statPractice">0</strong></div><div class="stat"><span>測驗最佳</span><strong id="statQuiz">—</strong></div><div class="stat"><span>學習活動</span><strong id="statActivities">0</strong></div></div>
+        <div class="history-panel"><div class="log-list" id="logList"><p style="color:var(--muted)">還沒有紀錄。先完成一張技巧卡或一場練習吧！</p></div><aside class="history-actions"><h3>📦 帶走學習成果</h3><button class="btn btn-primary" id="downloadHistory">下載學習歷程 CSV</button><button class="btn btn-secondary" id="downloadWord">下載完整 Word 講義</button><button class="btn btn-secondary" id="openReflection">填寫學習反思</button><button class="btn btn-secondary btn-small" id="clearHistory">清除這台裝置的紀錄</button><p class="privacy-note">🔒 不會上傳姓名、筆記或作答資料。</p></aside></div>
+        <div class="teacher-box"><div class="teacher-icon">🧑‍🏫</div><div><h3>教師教學建議</h3><p>45 分鐘可安排：技巧卡 10 分 → 20×20 示範 8 分 → 小組 3 張暖身 12 分 → 測驗與回饋 10 分 → 反思 5 分。</p></div><button class="btn" id="printPage">🖨️ 列印教學頁</button></div>
+      </div>
+    </section>
+  </main>
+
+  <footer><div class="footer-inner"><div><strong>上台發光！PechaKucha 簡報實驗室</strong><p>練習不是為了不緊張，而是緊張時仍知道下一步。</p></div><span class="footer-badge">Made for curious speakers ✦</span></div></footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <div class="modal" id="reflectionModal" role="dialog" aria-modal="true" aria-labelledby="reflectionTitle"><div class="modal-card"><h3 id="reflectionTitle">今天，我比上次更進步了嗎？</h3><p>用幾句話記下你的發現，它會進入學習歷程與 Word 講義。</p><label for="reflectionText"><strong>我的反思</strong></label><textarea id="reflectionText" rows="6" placeholder="我做得最好的是…… 下次我想改善……"></textarea><div class="name-row"><input type="text" id="studentName" placeholder="姓名或座號（選填）"><button class="btn btn-primary" id="saveReflection">儲存反思</button></div><div class="modal-actions"><button class="btn btn-secondary btn-small" id="closeReflection">稍後再寫</button></div></div></div>
+
+  <script>
+    (() => {
+      'use strict';
+      const KEY = 'shine_pk_learning_v1';
+      const defaultState = {tips:[], practices:[], quizzes:[], logs:[], notes:'', reflection:'', studentName:'', sound:true, visited:false};
+      let state;
+      try { state = {...defaultState, ...JSON.parse(localStorage.getItem(KEY) || '{}')}; } catch(e) { state = {...defaultState}; }
+      const $ = (s, root=document) => root.querySelector(s), $$ = (s, root=document) => [...root.querySelectorAll(s)];
+      const save = () => localStorage.setItem(KEY, JSON.stringify(state));
+      const escapeHTML = s => String(s).replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+      const formatTime = iso => new Date(iso).toLocaleString('zh-TW',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'});
+      const toast = msg => { const el=$('#toast'); el.textContent=msg; el.classList.add('show'); clearTimeout(toast.t); toast.t=setTimeout(()=>el.classList.remove('show'),2300); };
+
+      let audioCtx;
+      function tone(freq=520,duration=.08,type='sine',gain=.055){
+        if(!state.sound) return;
+        try { audioCtx ||= new (window.AudioContext||window.webkitAudioContext)(); const o=audioCtx.createOscillator(),g=audioCtx.createGain(); o.type=type;o.frequency.value=freq;g.gain.setValueAtTime(gain,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+duration);o.connect(g).connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+duration); } catch(e){}
+      }
+      function successSound(){ tone(523,.12);setTimeout(()=>tone(659,.12),110);setTimeout(()=>tone(784,.18),220); }
+      function addLog(type,title,detail,icon){ const now=new Date().toISOString(); state.logs.unshift({type,title,detail,icon,time:now}); state.logs=state.logs.slice(0,80); save(); renderHistory(); }
+      function confetti(){ const colors=['#6c4cff','#ffd84d','#ff6b6b','#19c7c8','#ff72b6']; for(let i=0;i<55;i++){const p=document.createElement('i');p.className='confetti';p.style.left=Math.random()*100+'vw';p.style.background=colors[i%colors.length];p.style.setProperty('--drift',(Math.random()*240-120)+'px');p.style.animationDelay=Math.random()*.5+'s';document.body.appendChild(p);setTimeout(()=>p.remove(),2500);} }
+
+      if(!state.visited){ state.visited=true; addLog('visit','開始學習','第一次打開互動課程','🚀'); }
+      $$('#skills .tip-card').forEach(card => {
+        const id=card.dataset.tip;
+        if(state.tips.includes(id)) card.classList.add('done');
+        card.addEventListener('click',()=>{
+          const open=card.getAttribute('aria-expanded')==='true'; card.setAttribute('aria-expanded',String(!open));
+          if(!state.tips.includes(id)){ state.tips.push(id); card.classList.add('done'); addLog('tip','完成技巧卡',card.querySelector('h3').textContent,'✅'); successSound(); toast('技巧已記入學習歷程！'); }
+          else { tone(open?360:480,.06); }
+          renderHistory();
+        });
+      });
+
+      const slideSets = {
+        school:[['🏫','先讓大家看見問題','用一個真實瞬間開場：校園裡，哪個小地方讓你覺得「可以更好」？'],['🔍','問題背後是什麼？','說出誰受影響、什麼時候發生，以及為什麼值得在意。'],['💡','提出你的第一步','別只說「應該改善」；提出一個明天就能開始的小行動。'],['🧑‍🤝‍🧑','找出同行夥伴','哪些人能一起幫忙？他們會因為什麼理由加入？'],['📣','一句話邀請行動','用一句簡短、有力量的話，邀請全班一起做出改變。'],['📸','放大關鍵場景','用一個畫面或例子，讓觀眾感覺自己就在現場。'],['📊','用證據說服','提供一個數字、觀察或訪談結果，證明問題真的存在。'],['🤔','聽見不同聲音','可能有人不同意嗎？先公平說出他們的擔心。'],['🛠️','把方法說具體','說明誰、何時、在哪裡，要採取哪一個行動。'],['🌱','從小規模開始','先試做一週會長什麼樣？如何知道它有沒有用？'],['🚧','預想一個阻礙','最大的困難可能是什麼？你準備怎麼調整？'],['🤝','讓更多人加入','用一個對大家都有好處的理由，建立共同目標。'],['🗓️','排出簡單時間表','說出第一天、第一週和第一個月分別要完成什麼。'],['📏','定義成功','你會觀察哪個變化，來判斷提案是否有效？'],['🔁','保留修正空間','如果第一次沒成功，下一版可以改變哪一件事？'],['🌍','連到更大意義','這個校園小改變，反映了什麼你在乎的價值？'],['✨','想像改變之後','帶大家看見成功後的一天，會有什麼不同？'],['🧠','濃縮核心訊息','如果觀眾只記得一句話，你希望是哪一句？'],['🙋','發出明確邀請','告訴觀眾：他們離開現場後，第一步能做什麼。'],['🔗','回扣開場','回到第 1 張的場景，讓故事漂亮地繞回原點。']],
+        future:[['🚀','從未來的一幕開始','想像十年後的某個早晨：你在哪裡？正準備做什麼？'],['🧭','說出你在乎的方向','不是只有職業名稱；你想解決什麼問題、創造什麼價值？'],['👣','找出今天的第一步','未來不是突然抵達。現在可以開始培養哪個能力？'],['🧱','承認路上的障礙','哪種困難最可能讓你放棄？你可以預先準備什麼？'],['💌','送一句話給現在的自己','以未來的你口吻，留下一句具體而真誠的提醒。'],['🔎','探索一個未知','你還不確定什麼？準備用什麼方式找到答案？'],['📚','需要哪些能力','挑一項知識、一項技能和一種態度來說明。'],['🧑‍🏫','想遇見誰','什麼樣的老師、同伴或前輩能幫你看見新方向？'],['🧪','設計一次小實驗','在一個月內，你可以做什麼來測試自己的興趣？'],['🎒','帶走與放下','成長路上，你想保留什麼特質，又想放下哪個習慣？'],['🌏','看見時代變化','十年後的世界可能有什麼不同？這對你代表什麼？'],['🧩','找到你的角色','面對這個變化，你希望自己扮演什麼角色？'],['💪','說一個韌性故事','回想一次挫折，它教會你什麼可以帶往未來？'],['🤝','建立支持網絡','誰會陪你前進？你又可以如何支持別人？'],['📍','設定一個里程碑','一年後，你希望看見哪個可驗證的進展？'],['🔄','允許夢想改版','如果方向改變，哪些核心價值仍然不變？'],['🌟','畫出理想日常','不只高光時刻；你希望平凡的一天長什麼樣？'],['🗣️','寫下核心宣言','用「我想成為一個……的人」開頭完成一句話。'],['📬','寄出未來邀請','邀請觀眾也為自己的未來採取一個小行動。'],['🌅','回到那個早晨','補完第 1 張的未來場景，用具體細節收尾。']],
+        recommend:[['🎁','先別公布答案','先描述它帶給你的感受或改變，讓觀眾猜猜你要推薦什麼。'],['❤️','說出你的連結','你第一次遇見它是在什麼時候？為什麼它對你特別？'],['⭐','給出三個理由','選最強的三點，不要列出所有優點。'],['⚖️','也說一個限制','可信的推薦不怕缺點；說明它適合誰、不適合誰。'],['👉','給觀眾行動入口','在哪裡可以開始？第一次體驗要注意什麼？'],['🎬','重現第一次','用場景、聲音或動作，讓觀眾走進你的經驗。'],['🔬','拆解一個細節','挑一個一般人容易忽略的小地方，說明它的魅力。'],['🆚','做一次比較','和大家熟悉的事物相比，它最大的不同是什麼？'],['💬','引用真實反應','朋友、家人或社群對它有什麼具體評價？'],['📈','展示帶來的改變','使用前與使用後，你的行為或想法有何不同？'],['🧠','破解一個誤會','大家對它最常見的誤解是什麼？'],['🎯','指出最適合的人','具體描繪哪一種人會特別喜歡它。'],['🚫','指出不適合的人','誠實說明哪些需求，它可能無法滿足。'],['💸','說明投入成本','需要多少時間、金錢或精力？值得的原因是什麼？'],['🗺️','提供入門路線','新手第一步、第二步、第三步分別是什麼？'],['💎','挑出唯一亮點','如果只能保留一個推薦理由，你會選哪一個？'],['📣','設計一句標語','用一句好記的話，濃縮你的推薦。'],['❓','預答觀眾疑問','觀眾此刻最可能問什麼？直接替他們回答。'],['🙌','發出低門檻挑戰','邀請大家在 24 小時內嘗試一個簡單版本。'],['🎁','揭曉真正禮物','回扣開場：你推薦的不只是事物，而是它帶來的哪種可能？']],
+        custom:[['🎬','用一個場景開場','讓觀眾先看見、聽見或感覺到一個具體時刻。'],['❓','提出核心問題','你的簡報究竟要回答哪一個問題？'],['💡','亮出主張','用一句完整的話，說出你最想讓大家相信的事。'],['📌','給出一個例子','用真實、具體的故事支撐主張。'],['👉','邀請一個行動','觀眾聽完後，可以做的第一步是什麼？'],['🔍','再深入一層','這件事表面下還有什麼容易被忽略的原因？'],['📊','補上一個證據','用數字、觀察或可信資料增加說服力。'],['🧑','讓人物出現','誰受到影響？用他的視角說一小段故事。'],['⚡','製造一個轉折','哪個發現改變了你原本的想法？'],['🧱','承認困難','最大的限制或反方意見是什麼？'],['🛠️','提出方法','把抽象建議拆成一個可執行步驟。'],['🌱','展示小成功','有沒有一個初步結果，證明方向值得繼續？'],['🔄','說明調整','你從失敗或回饋中改變了什麼？'],['🧩','連接前後','這張與上一張的關係是因果、比較，還是時間推進？'],['🌍','放大意義','這個主題和更大的社會、生活或未來有何關係？'],['💭','讓觀眾想像','如果你的主張成真，日常會有什麼具體改變？'],['🧠','重申核心','換一種更簡短的說法，再說一次你的主張。'],['🙋','指向觀眾','這件事為什麼與現場的每一個人有關？'],['📣','發出行動邀請','把「希望大家支持」改成明確、做得到的動作。'],['🔗','回扣開場','回到第一張的場景，完成一個有記憶點的結尾。']]
+      };
+      let maxSlides=3,currentSlide=0,timeLeft=20,timer=null,running=false;
+      function currentSet(){return slideSets[$('#topicSelect').value];}
+      function renderSlide(){const s=currentSet()[currentSlide];$('#slideEmoji').textContent=s[0];$('#slideTitle').textContent=s[1];$('#slidePrompt').textContent=s[2];$('#slideIndex').textContent=`投影片 ${currentSlide+1} / ${maxSlides}`;$('#timerNumber').textContent=timeLeft;$('#timerRing').style.setProperty('--timer',(timeLeft/20*100)+'%');}
+      function setStatus(s){$('#timerStatus').textContent=s;$('#practiceStage').classList.toggle('running',running);}
+      function stopTimer(){clearInterval(timer);timer=null;running=false;setStatus('已暫停');}
+      function startTimer(){ if(running)return; running=true;setStatus('演練進行中');tone(660,.09);timer=setInterval(()=>{timeLeft--;if(timeLeft<=3&&timeLeft>0)tone(420+timeLeft*70,.07,'square',.035);if(timeLeft<=0){tone(820,.12);if(currentSlide>=maxSlides-1){clearInterval(timer);timer=null;running=false;timeLeft=0;renderSlide();setStatus('演練完成！');const item={slides:maxSlides,topic:$('#topicSelect option:checked').textContent,time:new Date().toISOString()};state.practices.push(item);addLog('practice',`完成 ${maxSlides} 張演練`,item.topic,'🎤');successSound();confetti();toast('太棒了！演練已記入學習歷程');return;}currentSlide++;timeLeft=20;}renderSlide();},1000);}
+      $$('.mode-btn').forEach(b=>b.addEventListener('click',()=>{$$('.mode-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');maxSlides=+b.dataset.slides;currentSlide=0;timeLeft=20;stopTimer();setStatus('準備好就按開始');renderSlide();tone(480,.06);}));
+      $('#startPractice').addEventListener('click',startTimer);$('#pausePractice').addEventListener('click',stopTimer);$('#resetPractice').addEventListener('click',()=>{stopTimer();currentSlide=0;timeLeft=20;setStatus('已重設，準備再來一次');renderSlide();});
+      $('#prevSlide').addEventListener('click',()=>{currentSlide=Math.max(0,currentSlide-1);timeLeft=20;renderSlide();tone(360,.05);});
+      $('#nextSlide').addEventListener('click',()=>{currentSlide=Math.min(maxSlides-1,currentSlide+1);timeLeft=20;renderSlide();tone(560,.05);});
+      $('#topicSelect').addEventListener('change',()=>{stopTimer();currentSlide=0;timeLeft=20;setStatus('新主題已就緒');renderSlide();});
+      document.addEventListener('keydown',e=>{if(!$('#practice').matches(':hover')||['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName))return;if(e.code==='Space'){e.preventDefault();running?stopTimer():startTimer();}if(e.key==='ArrowLeft')$('#prevSlide').click();if(e.key==='ArrowRight')$('#nextSlide').click();});
+      $('#practiceNotes').value=state.notes||'';let notesWait;$('#practiceNotes').addEventListener('input',e=>{state.notes=e.target.value;clearTimeout(notesWait);notesWait=setTimeout(save,400);});
+
+      const hookPrompts=['如果全世界明天都不能使用手機，你的第一天會怎麼過？','你願意用一週的零用錢，換取每天多一小時嗎？','我們每天忽略的哪件小事，其實正在改變世界？','如果學校只能保留一門課，你會留下哪一門？','一個失敗，怎麼可能成為最好的禮物？','你最近一次改變想法，是因為看見了什麼？','假如你能對三年前的自己說一句話，會說什麼？'];
+      $('#newHook').addEventListener('click',()=>{let p;do{p=hookPrompts[Math.floor(Math.random()*hookPrompts.length)]}while(p===$('#hookPrompt').textContent);$('#hookPrompt').textContent=p;tone(620,.07);});
+      let breathBusy=false;$('#startBreath').addEventListener('click',async()=>{if(breathBusy)return;breathBusy=true;const orb=$('#breathOrb');for(let i=0;i<2;i++){orb.textContent='吸氣 4';orb.classList.add('inhale');tone(440,.2);await new Promise(r=>setTimeout(r,4000));orb.textContent='吐氣 4';orb.classList.remove('inhale');tone(330,.2);await new Promise(r=>setTimeout(r,4000));}orb.textContent='完成 ✓';breathBusy=false;addLog('breath','完成穩定呼吸','2 輪 4–4 呼吸練習','🫁');successSound();toast('呼吸完成，現在把注意力放回訊息！');});
+
+      const quizData=[
+        {q:'一張投影片最理想的資訊焦點是？',o:['把所有資料都放上去','只聚焦一個主要訊息','至少列出十個重點','照著講義完整貼上'],a:1,e:'一頁一訊息能降低觀眾的理解負擔；細節可由講者口頭補充。'},
+        {q:'PechaKucha 20×20 的標準總長度是？',o:['4 分鐘','5 分鐘','6 分 40 秒','20 分鐘'],a:2,e:'20 張 × 每張 20 秒 = 400 秒，也就是 6 分 40 秒。'},
+        {q:'下列哪一種開場最容易抓住注意力？',o:['先念完整個人履歷','先說「我沒準備好」','提出和觀眾有關的問題','逐字朗讀題目'],a:2,e:'問題、出乎意料的數字或短故事，能快速建立觀眾的好奇心。'},
+        {q:'投影片即將自動換頁，但句子還沒說完，較好的做法是？',o:['停下來責怪設備','硬把語速加快到聽不清楚','順著下一頁畫面自然轉場','要求觀眾等你倒回上一頁'],a:2,e:'PechaKucha 的核心是事先排好節奏；臨場時可順著下一頁接話，不必追趕舊頁。'},
+        {q:'要讓聲音更有重點，可以怎麼做？',o:['全程維持完全相同的速度','重要關鍵字前稍作停頓','每一句都越講越小聲','把每個字都喊得很大聲'],a:1,e:'停頓、速度、音量與語氣的變化，就像聲音的標點符號。'},
+        {q:'設計 PechaKucha 投影片時，哪個做法較適合？',o:['使用大圖與少量關鍵字','每頁放滿小字避免遺漏','把講稿逐字貼在頁面','每頁同時呈現五種圖表'],a:0,e:'PechaKucha 節奏快，觀眾需要能在數秒內理解畫面；大圖和少量文字最有效。'},
+        {q:'面對上台緊張，下列哪個策略最實用？',o:['完全避免與觀眾眼神接觸','把注意力放回想傳達的訊息','背對觀眾只看投影片','開場先為緊張道歉很久'],a:1,e:'緊張很正常。站穩、呼吸，並專注在訊息與觀眾需求，能讓身體逐漸進入狀態。'},
+        {q:'有力量的結尾最需要包含什麼？',o:['突然說「以上」','加入沒解釋的新主題','回扣核心並給出行動','把全部內容重新念一遍'],a:2,e:'好的結尾會回扣開場或核心訊息，並清楚告訴觀眾接下來能做什麼。'}
+      ];
+      let answers=Array(quizData.length).fill(null),reviewed=false;
+      function renderQuiz(){const box=$('#questions');box.innerHTML=quizData.map((q,i)=>`<article class="question-card ${reviewed?'reviewed':''}" data-q="${i}"><div class="q-label"><span class="q-num">${i+1}</span><span>${q.q}</span></div><div class="options">${q.o.map((o,j)=>`<button class="option ${answers[i]===j?'selected':''} ${reviewed?(j===q.a?'correct':answers[i]===j&&j!==q.a?'wrong':''):''}" data-a="${j}" ${reviewed?'disabled':''}><span class="option-letter">${'ABCD'[j]}</span><span>${o}</span></button>`).join('')}</div><div class="explain"><strong>${answers[i]===q.a?'答對了！':'正確答案：'+ 'ABCD'[q.a]}</strong> ${q.e}</div></article>`).join('');$$('.option',box).forEach(btn=>btn.addEventListener('click',()=>{const card=btn.closest('.question-card'),i=+card.dataset.q;answers[i]=+btn.dataset.a;$$('.option',card).forEach(x=>x.classList.remove('selected'));btn.classList.add('selected');tone(500,.05);}));}
+      renderQuiz();
+      $('#submitQuiz').addEventListener('click',()=>{if(answers.includes(null)){toast(`還有 ${answers.filter(x=>x===null).length} 題尚未作答`);tone(240,.12);return;}reviewed=true;const score=answers.filter((a,i)=>a===quizData[i].a).length;renderQuiz();$('#scoreOrb').textContent=`${score}/8`;$('#scoreTitle').textContent=score>=7?'簡報高手！':score>=5?'基礎很穩！':'再練一次就會更好';$('#scoreCopy').textContent=score>=7?'你已掌握關鍵，下一步就是上台實戰。':score>=5?'看看錯題解析，再用演練室把知識變成能力。':'先重看技巧卡與 20×20 規則，再挑戰一次。';$('#submitQuiz').style.display='none';$('#retryQuiz').style.display='inline-flex';state.quizzes.push({score,total:8,time:new Date().toISOString()});addLog('quiz','完成理解力測驗',`答對 ${score} / 8 題`,'🧠');score>=7?(successSound(),confetti()):tone(440,.15);renderHistory();});
+      $('#retryQuiz').addEventListener('click',()=>{answers=Array(quizData.length).fill(null);reviewed=false;renderQuiz();$('#scoreOrb').textContent='—';$('#scoreTitle').textContent='再次挑戰';$('#scoreCopy').textContent='根據剛才的解析重新作答，檢查自己是否真的理解。';$('#submitQuiz').style.display='inline-flex';$('#retryQuiz').style.display='none';scrollTo({top:$('#questions').getBoundingClientRect().top+scrollY-95,behavior:'smooth'});});
+
+      function renderHistory(){ $('#statTips').textContent=`${state.tips.length} / 6`;$('#statPractice').textContent=state.practices.length;const best=state.quizzes.length?Math.max(...state.quizzes.map(q=>q.score))+'/8':'—';$('#statQuiz').textContent=best;$('#statActivities').textContent=state.logs.length;const list=$('#logList');list.innerHTML=state.logs.length?state.logs.slice(0,12).map(l=>`<div class="log-item"><div class="log-icon">${l.icon||'•'}</div><div class="log-text"><b>${escapeHTML(l.title)}</b><span>${escapeHTML(l.detail||'')}</span></div><span class="log-time">${formatTime(l.time)}</span></div>`).join(''):'<p style="color:var(--muted)">還沒有紀錄。先完成一張技巧卡或一場練習吧！</p>'; }
+      renderHistory();
+
+      function download(filename,content,type){const blob=new Blob(['\ufeff'+content],{type});const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+      function downloadCSV(){const rows=[['時間','活動類型','活動名稱','內容'],...state.logs.map(l=>[formatTime(l.time),l.type,l.title,l.detail||''])];const csv=rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\r\n');download(`PechaKucha學習歷程_${new Date().toISOString().slice(0,10)}.csv`,csv,'text/csv;charset=utf-8');tone(650,.1);toast('學習歷程 CSV 已下載');}
+      function wordHTML(){
+        const tips=$$('.tip-card').map(c=>`<li><b>${c.querySelector('h3').textContent}</b>：${c.querySelector('p').textContent}${c.querySelector('.tip-more ul').outerHTML}</li>`).join('');
+        const logs=state.logs.map(l=>`<tr><td>${formatTime(l.time)}</td><td>${escapeHTML(l.title)}</td><td>${escapeHTML(l.detail||'')}</td></tr>`).join('');
+        const quizSheet=quizData.map((q,i)=>`<li><b>${q.q}</b><ol type="A">${q.o.map(o=>`<li>${o}</li>`).join('')}</ol><p>答案：${'ABCD'[q.a]}。${q.e}</p></li>`).join('');
+        return `<!doctype html><html><head><meta charset="utf-8"><style>body{font-family:'Microsoft JhengHei',sans-serif;line-height:1.7;color:#25213a;font-size:12pt}h1{color:#6c4cff}h2{color:#4b2fd4;border-bottom:2px solid #ffd84d;padding-bottom:5px}h3{color:#25213a}table{border-collapse:collapse;width:100%}td,th{border:1px solid #aaa;padding:7px}th{background:#eeeaff}.box{background:#fff5c8;padding:12px}.page{page-break-before:always}.muted{color:#666}</style></head><body>
+        <h1>上台發光！PechaKucha 簡報實驗室</h1><p>高中生互動簡報課程｜教師教學與學生自學講義</p><p>姓名／座號：${escapeHTML(state.studentName||'________________')}</p>
+        <h2>學習路線</h2><ol><li>理解好簡報：掌握內容、畫面與台風。</li><li>認識 20×20：理解規則、節奏與故事結構。</li><li>反覆演練：從 3 張暖身、5 張衝刺到完整 20 張。</li><li>檢核與反思：完成測驗，留下下一次進步線索。</li></ol>
+        <h2>一、上台簡報六招</h2><ol>${tips}</ol><div class="box"><b>故事公式：</b>鉤子（為什麼要聽？）→ 發現（證據與轉折）→ 行動（接下來怎麼做？）</div>
+        <h2>二、PechaKucha 20×20</h2><p>20 張投影片，每張自動播放 20 秒，總長 6 分 40 秒。限制能幫助講者剪掉不必要的內容，提前排好故事節奏。</p><ul><li><b>圖像優先：</b>每頁一個視覺焦點。</li><li><b>自動換頁：</b>不等待、不回頭，順著下一頁自然轉場。</li><li><b>串成故事：</b>讓前後頁彼此接棒。</li></ul><p><b>建議結構：</b>第 1–4 張開場勾起好奇；第 5–16 張用例子、證據和轉折發展；第 17–20 張回扣主題並邀請行動。</p>
+        <h2>三、反覆演練</h2><p><b>可選主題：</b>我想改變的校園小事、十年後的我、一件值得推薦的事物、自訂自由題。</p><p><b>練習方式：</b>先做 3 張暖身，再做 5 張衝刺；熟悉節奏後挑戰完整 20 張。每張 20 秒，最後 3 秒會有提示音。</p><p><b>上台前穩定法：</b>吸氣 4 秒、吐氣 4 秒，共做兩輪。把注意力放回想傳達的訊息。</p><p><b>演練自評：</b><br>□ 開場有鉤子　□ 一頁一件事　□ 聲音有停頓　□ 視線看觀眾　□ 結尾有行動</p><p><b>我的演練筆記：</b><br>${escapeHTML(state.notes||'尚未填寫').replace(/\n/g,'<br>')}</p>
+        <h2 class="page">四、理解力測驗與解析</h2><ol>${quizSheet}</ol>
+        <h2>五、我的學習歷程</h2><p>已讀技巧：${state.tips.length}/6；完成演練：${state.practices.length} 次；測驗最佳：${state.quizzes.length?Math.max(...state.quizzes.map(q=>q.score))+'/8':'尚未作答'}</p><table><tr><th>時間</th><th>活動</th><th>內容</th></tr>${logs||'<tr><td colspan="3">尚無紀錄</td></tr>'}</table>
+        <h2>六、學習反思</h2><p>${escapeHTML(state.reflection||'我做得最好的是…… 下次我想改善……').replace(/\n/g,'<br>')}</p>
+        <h2>教師教學建議</h2><p>45 分鐘安排：技巧卡 10 分鐘 → 20×20 示範 8 分鐘 → 小組 3 張暖身 12 分鐘 → 測驗與回饋 10 分鐘 → 反思 5 分鐘。</p><p class="muted">教材：上台發光！PechaKucha 簡報實驗室</p></body></html>`;
+      }
+      function downloadWord(){download(`PechaKucha互動課程與學習單_${new Date().toISOString().slice(0,10)}.doc`,wordHTML(),'application/msword;charset=utf-8');tone(650,.1);toast('Word 講義已下載');}
+      $('#downloadHistory').addEventListener('click',downloadCSV);$('#downloadWord').addEventListener('click',downloadWord);$('#downloadWordTop').addEventListener('click',downloadWord);$('#printPage').addEventListener('click',()=>window.print());
+      const modal=$('#reflectionModal');function closeModal(){modal.classList.remove('open');$('#openReflection').focus();}$('#openReflection').addEventListener('click',()=>{$('#reflectionText').value=state.reflection||'';$('#studentName').value=state.studentName||'';modal.classList.add('open');setTimeout(()=>$('#reflectionText').focus(),50);});$('#closeReflection').addEventListener('click',closeModal);modal.addEventListener('click',e=>{if(e.target===modal)closeModal();});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&modal.classList.contains('open'))closeModal();});
+      $('#saveReflection').addEventListener('click',()=>{state.reflection=$('#reflectionText').value.trim();state.studentName=$('#studentName').value.trim();save();addLog('reflection','完成學習反思',state.reflection?state.reflection.slice(0,60):'未填寫內容','✍️');closeModal();successSound();toast('反思已儲存');});
+      $('#clearHistory').addEventListener('click',()=>{if(!confirm('確定要清除這台裝置上的技巧、演練、測驗與反思紀錄嗎？下載過的檔案不受影響。'))return;localStorage.removeItem(KEY);location.reload();});
+
+      $('#soundToggle').addEventListener('click',e=>{state.sound=!state.sound;save();e.currentTarget.textContent=state.sound?'🔊':'🔇';e.currentTarget.setAttribute('aria-pressed',String(state.sound));e.currentTarget.setAttribute('aria-label',state.sound?'關閉音效':'開啟音效');if(state.sound)tone(540,.09);toast(state.sound?'音效已開啟':'音效已關閉');});
+      $('#soundToggle').textContent=state.sound?'🔊':'🔇';$('#soundToggle').setAttribute('aria-pressed',String(state.sound));
+      $$('[data-sound]').forEach(el=>el.addEventListener('click',()=>tone(520,.06)));
+      $('#mobileNav').addEventListener('change',e=>document.querySelector(e.target.value).scrollIntoView({behavior:'smooth'}));
+      const sections=$$('main section[id]');const updateScroll=()=>{const max=document.documentElement.scrollHeight-innerHeight;$('#readingProgress').style.width=(max?scrollY/max*100:0)+'%';let active='#home';sections.forEach(s=>{if(s.getBoundingClientRect().top<150)active='#'+s.id;});$$('.nav-links a').forEach(a=>a.classList.toggle('active',a.getAttribute('href')===active));};addEventListener('scroll',updateScroll,{passive:true});updateScroll();renderSlide();
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PechaKucha 互動教室 - 課程主頁</title>
+    <style>
+        :root {
+            --primary: #ff6b6b;
+            --secondary: #4ecdc4;
+            --accent: #ffe66d;
+            --dark: #292f36;
+            --light: #f7fff7;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Noto Sans TC', 'Microsoft JhengHei', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            min-height: 100vh;
+            color: var(--dark);
+            padding: 40px 20px;
+            font-size: 20px; /* 大字體以利閱讀 */
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+            animation: fadeInDown 1s ease;
+        }
+
+        h1 {
+            font-size: 3rem;
+            color: #ff4757;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 15px;
+            letter-spacing: 2px;
+        }
+
+        p.subtitle {
+            font-size: 1.5rem;
+            color: #2f3542;
+            background: rgba(255,255,255,0.6);
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .controls {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .btn-sound {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 6px 0 #e84118, 0 10px 20px rgba(0,0,0,0.15);
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-sound:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 0 #e84118, 0 12px 25px rgba(0,0,0,0.2);
+        }
+
+        .btn-sound:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #e84118, 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            text-decoration: none;
+            color: var(--dark);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            border: 4px solid transparent;
+            z-index: 1;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(135deg, var(--accent) 0%, #ff9f43 100%);
+            z-index: -1;
+            transform: scaleY(0);
+            transform-origin: bottom;
+            transition: transform 0.4s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-15px) scale(1.03);
+            border-color: #ff9f43;
+            color: #fff;
+            box-shadow: 0 20px 40px rgba(255, 159, 67, 0.4);
+        }
+        
+        .card:hover::before {
+            transform: scaleY(1);
+        }
+
+        .card:hover .card-icon, .card:hover .card-title, .card:hover .card-desc {
+            color: #fff;
+        }
+
+        .card-icon {
+            font-size: 4rem;
+            margin-bottom: 15px;
+            display: inline-block;
+            transition: transform 0.5s ease;
+        }
+
+        .card:hover .card-icon {
+            transform: rotate(15deg) scale(1.2);
+        }
+
+        .card-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #341f97;
+            transition: color 0.3s ease;
+        }
+
+        .card-desc {
+            font-size: 1.2rem;
+            color: #576574;
+            transition: color 0.3s ease;
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 浮動的裝飾物 */
+        .decoration {
+            position: fixed;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.5;
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2.2rem; }
+            .grid { grid-template-columns: 1fr; }
+            body { padding: 20px 15px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🌟 PechaKucha 互動教室 🌟</h1>
+            <p class="subtitle">探索簡報的藝術，讓你的每一次上台都閃耀發光！</p>
+        </header>
+
+        <div class="controls">
+            <button id="soundToggle" class="btn-sound">
+                <span id="soundIcon">🔊</span> 音效：開啟
+            </button>
+        </div>
+
+        <div class="grid" id="cardGrid">
+            <!-- 卡片會由 JS 動態產生 -->
+        </div>
+    </div>
+
+    <script>
+        // 設定網頁資料
+        const pages = [
+            { id: 1, title: '互動教室 1', icon: '🎨', desc: '基礎簡報技巧與 20×20 演練' },
+            { id: 2, title: '互動教室 2', icon: '🚀', desc: '進階故事結構與台風訓練' },
+            { id: 3, title: '互動教室 3', icon: '💡', desc: '創意發想與視覺化排版' },
+            { id: 4, title: '互動教室 4', icon: '🎤', desc: '聲音語調與表達力特訓' },
+            { id: 5, title: '互動教室 5', icon: '⏱️', desc: '掌握時間節奏的秘密' },
+            { id: 6, title: '互動教室 6', icon: '🎯', desc: '精準傳遞核心訊息' },
+            { id: 7, title: '互動教室 7', icon: '🧩', desc: '整合應用與實戰模擬' },
+            { id: 8, title: '互動教室 8', icon: '🔥', desc: '高階挑戰與即興發揮' },
+            { id: 9, title: '互動教室 9', icon: '🏆', desc: '總複習與成果發表' }
+        ];
+
+        const grid = document.getElementById('cardGrid');
+        
+        pages.forEach((page, index) => {
+            const delay = index * 0.1;
+            const a = document.createElement('a');
+            a.href = `PechaKucha互動教室${page.id}.html`;
+            a.className = 'card';
+            a.style.animation = `fadeInDown 0.6s ease ${delay}s both`;
+            
+            a.innerHTML = `
+                <div class="card-icon">${page.icon}</div>
+                <div class="card-title">${page.title}</div>
+                <div class="card-desc">${page.desc}</div>
+            `;
+            
+            grid.appendChild(a);
+        });
+
+        // 音效系統
+        let soundEnabled = true;
+        let audioCtx;
+        
+        function playTone(freq, type, duration, vol) {
+            if (!soundEnabled) return;
+            try {
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                
+                gain.gain.setValueAtTime(vol, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+                
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch (e) {
+                console.log("Audio play failed", e);
+            }
+        }
+
+        function playHoverSound() {
+            playTone(600, 'sine', 0.1, 0.03);
+        }
+
+        function playClickSound() {
+            playTone(800, 'triangle', 0.15, 0.08);
+            setTimeout(() => playTone(1200, 'sine', 0.2, 0.08), 50);
+        }
+
+        const soundBtn = document.getElementById('soundToggle');
+        
+        soundBtn.addEventListener('click', () => {
+            soundEnabled = !soundEnabled;
+            if (soundEnabled) {
+                soundBtn.innerHTML = '<span id="soundIcon">🔊</span> 音效：開啟';
+                soundBtn.style.background = '#ff6b6b';
+                soundBtn.style.boxShadow = '0 6px 0 #e84118, 0 10px 20px rgba(0,0,0,0.15)';
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                playTone(400, 'sine', 0.1, 0.1);
+                setTimeout(() => playTone(600, 'sine', 0.1, 0.1), 100);
+            } else {
+                soundBtn.innerHTML = '<span id="soundIcon">🔇</span> 音效：關閉';
+                soundBtn.style.background = '#a4b0be';
+                soundBtn.style.boxShadow = '0 6px 0 #747d8c, 0 10px 20px rgba(0,0,0,0.15)';
+            }
+        });
+
+        const cards = document.querySelectorAll('.card');
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', playHoverSound);
+            card.addEventListener('click', () => {
+                playClickSound();
+            });
+        });
+
+        // 隨機產生背景漂浮裝飾物
+        function createDecorations() {
+            const emojis = ['✨', '🎈', '🎉', '💡', '🌟', '🎵', '🚀', '🎨'];
+            for(let i=0; i<20; i++) {
+                const dec = document.createElement('div');
+                dec.className = 'decoration';
+                dec.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                
+                const size = 20 + Math.random() * 40;
+                dec.style.fontSize = `${size}px`;
+                dec.style.left = `${Math.random() * 100}vw`;
+                dec.style.top = `${Math.random() * 100}vh`;
+                
+                const duration = 15 + Math.random() * 25;
+                dec.animate([
+                    { transform: 'translateY(0) rotate(0deg)' },
+                    { transform: `translateY(-150px) rotate(${360 * (Math.random()>0.5?1:-1)}deg)` },
+                    { transform: 'translateY(0) rotate(0deg)' }
+                ], {
+                    duration: duration * 1000,
+                    iterations: Infinity,
+                    easing: 'ease-in-out'
+                });
+                
+                document.body.appendChild(dec);
+            }
+        }
+        
+        window.addEventListener('DOMContentLoaded', createDecorations);
+    </script>
+</body>
+</html>
